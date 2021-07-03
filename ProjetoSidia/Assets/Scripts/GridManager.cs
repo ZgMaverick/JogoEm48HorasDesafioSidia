@@ -62,22 +62,50 @@ public class GridManager : MonoBehaviour
     public void SpawnBoardObjects(int numCasas)
     {
 
-        Vector3 posCubo = new Vector3(0, 0.90f, 0);
+        
+        GameObject peaoCriado;
 
-        virtualBoard[0, numCasas/2] = 1;
+        
+        virtualBoard[0,0] = 1;
+        virtualBoard[15,15] = 1;
+     
 
         for (int i = 0; i <= numCasas - 1; ++i)
         {
             for (int j = 0; j <= numCasas - 1; ++j)
             {
+                peaoCriado = null;
+                Vector3 posCubo = new Vector3(0, 0.90f, 0);
                 switch (virtualBoard[i, j])
                 {
+                    case 0:
+
+                        posCubo += cube2dVectorStorage[i, j].transform.position;
+                        peaoCriado = Instantiate(peon, posCubo, Quaternion.identity, cube2dVectorStorage[i, j].transform);
+                        peaoCriado.GetComponent<MeshRenderer>().material = player1Mat;
+                        peonData = peaoCriado.GetComponent<PeonData>();
+
+                        //peao
+                        //peonData;
+                        peonData.Health = 3;
+                        peonData.Move = 3;
+                        peonData.Damage = 2;
+                        peonData.AtkRange = 2;
+                        peonData.PosicaoPeao[0, 0] = i;
+                        peonData.PosicaoPeao[1, 0] = j;
+                        peonData.Player = 1;
+                        //peonData.ReceiveDamage();
+
+                        //cubo
+                        cube2dVectorStorage[i, j].GetComponent<CubeData>().updateFill();
+
+                        break;
                     case 1:
 
                         posCubo += cube2dVectorStorage[i, j].transform.position;
-                        var peaoCriado = Instantiate(peon, posCubo, Quaternion.identity, cube2dVectorStorage[i, j].transform);
+                        peaoCriado = Instantiate(peon, posCubo, Quaternion.identity, cube2dVectorStorage[i, j].transform);
                         //if ();
-                        peaoCriado.GetComponent<MeshRenderer>().material = player1Mat;
+                        peaoCriado.GetComponent<MeshRenderer>().material = player2Mat;
                         peonData = peaoCriado.GetComponent<PeonData>();
 
                         //peao
@@ -89,7 +117,7 @@ public class GridManager : MonoBehaviour
                         peonData.AtkRange = 2;
                         peonData.PosicaoPeao[0, 0] = i;
                         peonData.PosicaoPeao[1, 0] = j;
-                        peonData.Player = 1;
+                        peonData.Player = 2;
                         //peonData.ReceiveDamage();
 
                         //cubo
