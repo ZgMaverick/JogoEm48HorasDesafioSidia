@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour
                 cubo = hit.transform.gameObject;
                 //Debug.Log(peao.GetComponent<PeonData>().PosicaoPeao[0, 0] + peao.GetComponent<PeonData>().PosicaoPeao[1, 0]);
                 Debug.Log(hit.transform.name);
-                //gridManager.Movimento(cubo);
+                gridManager.Movimento(peao,cubo);
 
             }
             if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && battlePhase == true)
@@ -76,9 +76,9 @@ public class GameManager : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            Debug.Log(numeroCasas);
-            Debug.Log(singlePlayer);
-            //Debug.Log(posInc);
+            //Debug.Log(numeroCasas);
+            //Debug.Log(singlePlayer);
+            Debug.Log(peao.transform.position);
             //Debug.Log(posFnl);
 
         }

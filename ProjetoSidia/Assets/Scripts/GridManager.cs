@@ -37,7 +37,6 @@ public class GridManager : MonoBehaviour
 
         for (int i = 0; i < numCasas; ++i)
         {
-            Debug.Log("ola");
             for (int j = 0; j < numCasas; ++j)
             {      
                 Vector3 spawnCubeLoc = new Vector3 (j,0,i) + Vector3.zero;
@@ -111,6 +110,7 @@ public class GridManager : MonoBehaviour
         foreach (GameObject a in cubeVectorStorage)
         {
             a.GetComponent<BoxCollider>().enabled = false;
+            a.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 1);
         }
         for (int i = -movimento; i <= movimento; ++i)
         {
@@ -147,5 +147,28 @@ public class GridManager : MonoBehaviour
                 }
             }
         }
+    }
+    public void Movimento (GameObject peaoTemp, GameObject cuboTemp)
+    {
+        StartCoroutine(PeonMoveAnim(peaoTemp, cuboTemp));
+    }
+
+    IEnumerator PeonMoveAnim(GameObject peaoTemp, GameObject cuboTemp)
+    {
+        float elapsedTime = 0;
+        float waitTime = 0.5f;
+        Vector3 peaoPos = peaoTemp.transform.position;
+        Vector3 cuboPos = cuboTemp.transform.position;
+        Vector3 up = new Vector3(0, 0.90f, 0);
+
+        while (elapsedTime < waitTime)
+        {
+            peaoTemp.transform.position = Vector3.Lerp(peaoPos, cuboPos, (elapsedTime / waitTime));
+            elapsedTime += Time.deltaTime;
+            Debug.Log(peaoTemp.transform.position);
+            Debug.Log(elapsedTime);
+            yield return null;
+        }
+
     }
 }
