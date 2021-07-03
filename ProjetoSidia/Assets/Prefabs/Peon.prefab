@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 743401705775674890}
   - component: {fileID: 7250379642922906282}
   - component: {fileID: 9063526102476945581}
+  - component: {fileID: 6336785054430427381}
   m_Layer: 0
   m_Name: Peon
-  m_TagString: Untagged
+  m_TagString: Peon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -95,3 +96,20 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.8137114, y: 0.5141044, z: 1.80102}
   m_Center: {x: -0.0030488968, y: -0.24294779, z: 0.020268023}
+--- !u!114 &6336785054430427381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7650939651960776777}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 573398e5045fe92409f9d1bbdb111532, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 0
+  move: 0
+  damage: 0
+  atkRange: 0
+  player: 0

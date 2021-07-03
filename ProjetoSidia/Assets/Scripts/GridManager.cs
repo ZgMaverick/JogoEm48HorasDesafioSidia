@@ -9,13 +9,16 @@ public class GridManager : MonoBehaviour
     private GameObject[] cubeVectorStorage;
     private GameObject[,] cube2dVectorStorage;
     private int[,] virtualBoard;
+    private int numeroCasas;
     PeonData peonData;
     CubeData cubeData;
+    public Camera Maincamera;
+
 
     // Start is called before the first frame update
     void Start()
     {
-
+        numeroCasas = GameManager.numeroCasas;
     }
 
     // Update is called once per frame
@@ -48,8 +51,13 @@ public class GridManager : MonoBehaviour
                 cube2dVectorStorage[i,j] = cubeTemp;       
             }
         }
+        Vector3 camPos = new Vector3 (0,numCasas,0);
+          camPos += ((cube2dVectorStorage[0, 0].transform.position + cube2dVectorStorage[numCasas - 1, numCasas - 1].transform.position) / 2);
+        Debug.Log(camPos);
+        Maincamera.transform.position = camPos;
         SpawnBoardObjects(numCasas);
     }
+
     public void SpawnBoardObjects(int numCasas)
     {
 
@@ -89,6 +97,29 @@ public class GridManager : MonoBehaviour
                     default:
 
                         break;
+                }
+            }
+        }
+    }
+
+    public void PrepareMov(GameObject peonTemp)
+    {
+        peonData = peonTemp.GetComponent<PeonData>();
+        int movimento = peonData.Move;
+        int posPeaoCol = peonData.PosicaoPeao[0, 0];
+        int posPeaoLin = peonData.PosicaoPeao[1, 0];
+        foreach (GameObject a in cubeVectorStorage)
+        {
+            a.GetComponent<BoxCollider>().enabled = false;
+        }
+        for (int i = -movimento; i <= movimento; ++i)
+        {
+            for (int j = -movimento; j <= movimento; ++j)
+            {
+                if (Mathf.Abs(i) + Mathf.Abs(j) <= movimento && (posPeaoCol + i >= 0 && posPeaoLin + j >= 0 && posPeaoCol + i <= numeroCasas -1 && posPeaoLin + j <= numeroCasas -1 ))
+                {
+                    cube2dVectorStorage[posPeaoCol + i, posPeaoLin + j].GetComponent<BoxCollider>().enabled = true;
+                    cube2dVectorStorage[posPeaoCol + i, posPeaoLin + j].GetComponent<Renderer>().material.color = new Color(0, 0, 0.50f, 1);
                 }
             }
         }
