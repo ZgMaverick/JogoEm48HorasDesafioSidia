@@ -36,6 +36,7 @@ public class Menu : MonoBehaviour
         Debug.Log("multiplayer");
         botoesPrinc.SetActive(false);
         botoesTam.SetActive(true);
+        GameManager.singlePlayer = true;
     }
 
     public void vsAi()
@@ -73,6 +74,7 @@ public class Menu : MonoBehaviour
         Debug.Log("66");
 
         SceneManager.LoadScene(1);
+        GameManager.numeroCasas = 6;
     }
 
     public void Tam10x10()
@@ -80,6 +82,7 @@ public class Menu : MonoBehaviour
         Debug.Log("1010");
 
         SceneManager.LoadScene(1);
+        GameManager.numeroCasas = 10;
     }
 
     public void Tam16x16()
@@ -87,6 +90,7 @@ public class Menu : MonoBehaviour
         Debug.Log("1616");
 
         SceneManager.LoadScene(1);
+        GameManager.numeroCasas = 16;
     }
 
     public void VoltarBotMen()
