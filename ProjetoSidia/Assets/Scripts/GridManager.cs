@@ -124,4 +124,28 @@ public class GridManager : MonoBehaviour
             }
         }
     }
+
+    public void PrepareAtk(GameObject peonTemp)
+    {
+        peonData = peonTemp.GetComponent<PeonData>();
+        int atkRange = peonData.AtkRange;
+        int posPeaoCol = peonData.PosicaoPeao[0, 0];
+        int posPeaoLin = peonData.PosicaoPeao[1, 0];
+        foreach (GameObject a in cubeVectorStorage)
+        {
+            a.GetComponent<BoxCollider>().enabled = false;
+            a.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 1);
+        }
+        for (int i = -atkRange; i <= atkRange; ++i)
+        {
+            for (int j = -atkRange; j <= atkRange; ++j)
+            {
+                if (Mathf.Abs(i) + Mathf.Abs(j) <= atkRange && (posPeaoCol + i >= 0 && posPeaoLin + j >= 0 && posPeaoCol + i <= numeroCasas - 1 && posPeaoLin + j <= numeroCasas - 1))
+                {
+                    cube2dVectorStorage[posPeaoCol + i, posPeaoLin + j].GetComponent<BoxCollider>().enabled = true;
+                    cube2dVectorStorage[posPeaoCol + i, posPeaoLin + j].GetComponent<Renderer>().material.color = new Color(0.5f, 0, 0, 1);
+                }
+            }
+        }
+    }
 }
