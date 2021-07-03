@@ -13,7 +13,7 @@ public class GridManager : MonoBehaviour
     PeonData peonData;
     CubeData cubeData;
     public Camera Maincamera;
-
+    public GameManager gameManager;
 
     // Start is called before the first frame update
     void Start()
@@ -155,6 +155,9 @@ public class GridManager : MonoBehaviour
 
     IEnumerator PeonMoveAnim(GameObject peaoTemp, GameObject cuboTemp)
     {
+        peonData = peaoTemp.GetComponent<PeonData>();
+        cubeData = cuboTemp.GetComponent<CubeData>();
+
         float elapsedTime = 0;
         float waitTime = 0.5f;
         Vector3 peaoPos = peaoTemp.transform.position;
@@ -163,12 +166,30 @@ public class GridManager : MonoBehaviour
 
         while (elapsedTime < waitTime)
         {
-            peaoTemp.transform.position = Vector3.Lerp(peaoPos, cuboPos, (elapsedTime / waitTime));
+            peaoTemp.transform.position = Vector3.Lerp(peaoPos, cuboPos+up, (elapsedTime / waitTime));
             elapsedTime += Time.deltaTime;
             Debug.Log(peaoTemp.transform.position);
             Debug.Log(elapsedTime);
             yield return null;
         }
 
+        //cubo
+        peaoTemp.transform.parent = cuboTemp.transform;
+        cubeData.CuboFillId = 1;
+        foreach (GameObject a in cubeVectorStorage)
+        {
+            a.GetComponent<BoxCollider>().enabled = true;
+            a.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 1);
+        }
+        //peao
+
+        Debug.Log("najbsoadbasodfbas");
+        peonData.PosicaoPeao[0, 0] = cubeData.CuboCordenada[0, 0];
+        peonData.PosicaoPeao[1, 0] = cubeData.CuboCordenada[1, 0];
+
+        //gameManager
+        gameManager.MoveAmount--;
+        gameManager.MovePhase = false;
+        //start atk phase
     }
 }
