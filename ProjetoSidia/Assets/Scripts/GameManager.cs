@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     private bool movePhase = false;
     private bool battlePhase = false;
     int numberDice = 3;
-    bool turnEven = true;
+    int turnoJogador = 1;
     GameObject cuboPeao;
     GameObject peao;
     GameObject cubo;
@@ -45,18 +45,21 @@ public class GameManager : MonoBehaviour
             {
                 cuboPeao = hit.transform.gameObject;
                 peao = cuboPeao.transform.GetChild(0).gameObject;
-                //Debug.Log(peao.GetComponent<PeonData>().PosicaoPeao[0, 0] + peao.GetComponent<PeonData>().PosicaoPeao[1, 0]);
-                //Debug.Log(hit.transform.name);
-                gridManager.PrepareMov(peao);
-                MovePhase = true;
-                BattlePhase = false;
+                if (peao.GetComponent<PeonData>().Player == turnoJogador) {               
+                    //Debug.Log(peao.GetComponent<PeonData>().PosicaoPeao[0, 0] + peao.GetComponent<PeonData>().PosicaoPeao[1, 0]);
+                    //Debug.Log(hit.transform.name);
+                    gridManager.PrepareMov(peao);
+                    MovePhase = true;
+                    BattlePhase = false;
+                }
             }
             if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().cuboFillId != 1 && MovePhase == true)    
             {
+                
                 cubo = hit.transform.gameObject;
                 //Debug.Log(peao.GetComponent<PeonData>().PosicaoPeao[0, 0] + peao.GetComponent<PeonData>().PosicaoPeao[1, 0]);
                 Debug.Log(hit.transform.name);
-                gridManager.Movimento(peao,cubo,cuboPeao);
+                gridManager.Movimento(peao, cubo, cuboPeao);
 
             }
             if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().cuboFillId == 1 && BattleAmount > 0 && BattlePhase == true)
@@ -75,21 +78,36 @@ public class GameManager : MonoBehaviour
             {
                 cuboPeao = hit.transform.gameObject;
                 peao = cuboPeao.transform.GetChild(0).gameObject;
-                //Debug.Log(peao.GetComponent<PeonData>().PosicaoPeao[0, 0] + peao.GetComponent<PeonData>().PosicaoPeao[1, 0]);
-                //Debug.Log(hit.transform.name);
-                gridManager.PrepareAtk(peao);
-                BattlePhase = true;
-                MovePhase = false;
+                if (peao.GetComponent<PeonData>().Player == turnoJogador)
+                {
+                    //Debug.Log(peao.GetComponent<PeonData>().PosicaoPeao[0, 0] + peao.GetComponent<PeonData>().PosicaoPeao[1, 0]);
+                    //Debug.Log(hit.transform.name);
+                    gridManager.PrepareAtk(peao);
+                    BattlePhase = true;
+                    MovePhase = false;
+                }
             }
         }
         if (Input.GetKeyDown(KeyCode.Return))
         {
+            if (turnoJogador == 1)
+            {
+                turnoJogador = 2;
+                moveAmount = 2;
+                battleAmount = 1;
+            }
+            else
+            {
+                turnoJogador = 1;
+                moveAmount = 2;
+                battleAmount = 1;
+            }
             //Debug.Log(numeroCasas);
             //Debug.Log(singlePlayer);
-            Debug.Log(peao.transform.position);
-            Debug.Log(cubo.transform.position);
-            Debug.Log(cubo.GetComponent<CubeData>().CuboFillId);
-            Debug.Log(cubo.GetComponent<CubeData>().CuboCordenada[0,0] + " " + cubo.GetComponent<CubeData>().CuboCordenada[1, 0]);
+            //Debug.Log(peao.transform.position);
+            //Debug.Log(cubo.transform.position);
+            //Debug.Log(cubo.GetComponent<CubeData>().CuboFillId);
+            //Debug.Log(cubo.GetComponent<CubeData>().CuboCordenada[0,0] + " " + cubo.GetComponent<CubeData>().CuboCordenada[1, 0]);
             //Debug.Log(posFnl);
 
         }

@@ -66,8 +66,8 @@ public class GridManager : MonoBehaviour
         GameObject peaoCriado;
 
         
-        virtualBoard[0,0] = 1;
-        virtualBoard[15,15] = 1;
+        virtualBoard[0, numCasas / 2] = 1;
+        virtualBoard[numCasas-1, numCasas/2] = 2;
      
 
         for (int i = 0; i <= numCasas - 1; ++i)
@@ -78,7 +78,7 @@ public class GridManager : MonoBehaviour
                 Vector3 posCubo = new Vector3(0, 0.90f, 0);
                 switch (virtualBoard[i, j])
                 {
-                    case 0:
+                    case 1:
 
                         posCubo += cube2dVectorStorage[i, j].transform.position;
                         peaoCriado = Instantiate(peon, posCubo, Quaternion.identity, cube2dVectorStorage[i, j].transform);
@@ -100,7 +100,7 @@ public class GridManager : MonoBehaviour
                         cube2dVectorStorage[i, j].GetComponent<CubeData>().updateFill();
 
                         break;
-                    case 1:
+                    case 2:
 
                         posCubo += cube2dVectorStorage[i, j].transform.position;
                         peaoCriado = Instantiate(peon, posCubo, Quaternion.identity, cube2dVectorStorage[i, j].transform);
