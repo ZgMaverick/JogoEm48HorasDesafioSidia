@@ -7,13 +7,24 @@ public class GameManager : MonoBehaviour
     public static int numeroCasas = 6;
     public static bool singlePlayer;
     public GridManager gridManager;
+    bool deployPhase;
+    int movePhase;
+    int battlePhase;
+    int numberDice;
+    bool turnOne;
+
     // Start is called before the first frame update\
     
-    void Start()
+    void awake()
     {
-        gridManager.CreateGrid(numeroCasas);
+       
     }
 
+    private void Start()
+    {
+        gridManager.CreateGrid(numeroCasas);
+        //gridManager.SpawnBoardObjects(numeroCasas);
+    }
     // Update is called once per frame
     void Update()   
     {

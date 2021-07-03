@@ -236,6 +236,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cube: {fileID: 5608463910510879949, guid: 0a9ab0ae665cf654c888c578559d0d10, type: 3}
+  peon: {fileID: 7650939651960776777, guid: 95393090749b24442b4bd558df7a327b, type: 3}
 --- !u!4 &415932839
 Transform:
   m_ObjectHideFlags: 0
