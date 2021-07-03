@@ -21,10 +21,10 @@ public class GridManager : MonoBehaviour
     {
         GameObject cubo;
 
-        for (int i = 0; i <= numCasas; ++i)
+        for (int i = 0; i < numCasas; ++i)
         {
             Debug.Log("ola");
-            for (int j = 0; j <= numCasas; ++j)
+            for (int j = 0; j < numCasas; ++j)
             {      
                 Vector3 spawnCubeLoc = new Vector3 (j,0,i) + Vector3.zero;
                 cubo = Instantiate(cube, spawnCubeLoc, Quaternion.identity);
