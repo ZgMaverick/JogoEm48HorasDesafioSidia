@@ -5,7 +5,7 @@ using UnityEngine;
 public class CubeData : MonoBehaviour
 {
     private int[,] cuboCordenada = new int[2, 1];
-    private int cuboFillId = 0;
+    public int cuboFillId = 0;
 
     public int[,] CuboCordenada { get => cuboCordenada; set => cuboCordenada = value; }
     public int CuboFillId { get => cuboFillId; set => cuboFillId = value; }
@@ -21,5 +21,24 @@ public class CubeData : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void updateFill()
+    {
+        foreach (Transform child in transform)
+        {
+            if (child.tag == "Peon")
+            {
+                cuboFillId = 1;
+            }
+            else if (child.tag == "Pickup")
+            {
+                cuboFillId = 2;
+            }
+            else
+            {
+                cuboFillId = 0;
+            }
+        }
     }
 }

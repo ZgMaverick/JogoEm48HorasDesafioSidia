@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     private bool battlePhase = false;
     int numberDice = 3;
     bool turnEven = true;
+    GameObject cuboPeao;
     GameObject peao;
     GameObject cubo;
 
@@ -40,24 +41,25 @@ public class GameManager : MonoBehaviour
         Ray mouse = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         if (Input.GetMouseButtonDown(0)) {
-            if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Peon" && MoveAmount>0 && MovePhase == false)
+            if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().cuboFillId == 1 && MoveAmount>0 && MovePhase == false)
             {
-                peao = hit.transform.gameObject;
+                cuboPeao = hit.transform.gameObject;
+                peao = cuboPeao.transform.GetChild(0).gameObject;
                 //Debug.Log(peao.GetComponent<PeonData>().PosicaoPeao[0, 0] + peao.GetComponent<PeonData>().PosicaoPeao[1, 0]);
                 //Debug.Log(hit.transform.name);
                 gridManager.PrepareMov(peao);
                 MovePhase = true;
                 BattlePhase = false;
             }
-            if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && MovePhase == true)    
+            if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().cuboFillId != 1 && MovePhase == true)    
             {
                 cubo = hit.transform.gameObject;
                 //Debug.Log(peao.GetComponent<PeonData>().PosicaoPeao[0, 0] + peao.GetComponent<PeonData>().PosicaoPeao[1, 0]);
                 Debug.Log(hit.transform.name);
-                gridManager.Movimento(peao,cubo);
+                gridManager.Movimento(peao,cubo,cuboPeao);
 
             }
-            if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && BattlePhase == true)
+            if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().cuboFillId == 1 && BattleAmount > 0 && BattlePhase == true)
             {
                 cubo = hit.transform.gameObject;
                 //Debug.Log(peao.GetComponent<PeonData>().PosicaoPeao[0, 0] + peao.GetComponent<PeonData>().PosicaoPeao[1, 0]);
@@ -69,9 +71,10 @@ public class GameManager : MonoBehaviour
         }
         if (Input.GetMouseButtonDown(1))
         {
-            if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Peon" && BattleAmount>0 && BattlePhase == false)
+            if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().cuboFillId == 1 && BattleAmount>0 && BattlePhase == false)
             {
-                peao = hit.transform.gameObject;
+                cuboPeao = hit.transform.gameObject;
+                peao = cuboPeao.transform.GetChild(0).gameObject;
                 //Debug.Log(peao.GetComponent<PeonData>().PosicaoPeao[0, 0] + peao.GetComponent<PeonData>().PosicaoPeao[1, 0]);
                 //Debug.Log(hit.transform.name);
                 gridManager.PrepareAtk(peao);
@@ -84,6 +87,9 @@ public class GameManager : MonoBehaviour
             //Debug.Log(numeroCasas);
             //Debug.Log(singlePlayer);
             Debug.Log(peao.transform.position);
+            Debug.Log(cubo.transform.position);
+            Debug.Log(cubo.GetComponent<CubeData>().CuboFillId);
+            Debug.Log(cubo.GetComponent<CubeData>().CuboCordenada[0,0] + " " + cubo.GetComponent<CubeData>().CuboCordenada[1, 0]);
             //Debug.Log(posFnl);
 
         }

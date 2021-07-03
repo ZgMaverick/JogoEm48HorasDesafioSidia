@@ -14,6 +14,8 @@ public class GridManager : MonoBehaviour
     CubeData cubeData;
     public Camera Maincamera;
     public GameManager gameManager;
+    public Material player1Mat;
+    public Material player2Mat;
 
     // Start is called before the first frame update
     void Start()
@@ -74,6 +76,8 @@ public class GridManager : MonoBehaviour
 
                         posCubo += cube2dVectorStorage[i, j].transform.position;
                         var peaoCriado = Instantiate(peon, posCubo, Quaternion.identity, cube2dVectorStorage[i, j].transform);
+                        //if ();
+                        peaoCriado.GetComponent<MeshRenderer>().material = player1Mat;
                         peonData = peaoCriado.GetComponent<PeonData>();
 
                         //peao
@@ -90,7 +94,7 @@ public class GridManager : MonoBehaviour
 
                         //cubo
 
-                        cube2dVectorStorage[i, j].GetComponent<CubeData>().CuboFillId = 1;
+                        cube2dVectorStorage[i, j].GetComponent<CubeData>().updateFill();
 
                         break;
                     default:
@@ -148,12 +152,12 @@ public class GridManager : MonoBehaviour
             }
         }
     }
-    public void Movimento (GameObject peaoTemp, GameObject cuboTemp)
+    public void Movimento (GameObject peaoTemp, GameObject cuboTemp, GameObject cuboPeao)
     {
-        StartCoroutine(PeonMoveAnim(peaoTemp, cuboTemp));
+        StartCoroutine(PeonMoveAnim(peaoTemp, cuboTemp, cuboPeao));
     }
 
-    IEnumerator PeonMoveAnim(GameObject peaoTemp, GameObject cuboTemp)
+    IEnumerator PeonMoveAnim(GameObject peaoTemp, GameObject cuboTemp, GameObject cuboPeao)
     {
         peonData = peaoTemp.GetComponent<PeonData>();
         cubeData = cuboTemp.GetComponent<CubeData>();
@@ -175,7 +179,8 @@ public class GridManager : MonoBehaviour
 
         //cubo
         peaoTemp.transform.parent = cuboTemp.transform;
-        cubeData.CuboFillId = 1;
+        cuboPeao.GetComponent<CubeData>().updateFill();
+        cuboTemp.GetComponent<CubeData>().updateFill();
         foreach (GameObject a in cubeVectorStorage)
         {
             a.GetComponent<BoxCollider>().enabled = true;
