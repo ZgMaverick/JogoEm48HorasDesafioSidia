@@ -9,7 +9,7 @@ public class MenuManager : MonoBehaviour
     public Menu menuConfig;
 
     // Start is called before the first frame update
-    void Start()    
+    void Start()
     {
         ShowMenu(menuAtual);
     }
@@ -20,18 +20,11 @@ public class MenuManager : MonoBehaviour
         
     }
 
-    public void ShowMenu(Menu menu)
+    void ShowMenu (Menu menu)
     {
-        if (menuAtual != null)
+        if (menu = menuAtual)
+            menuAtual.IsOpen = true;
+        else
             menuAtual.IsOpen = false;
-        menuAtual = menu;
-        menuAtual.IsOpen = true;
-    }
-    public void HideMenu(Menu menu)
-    {
-        if (menuAtual != null)
-            menuAtual.IsOpen = false;
-        menuAtual = menu;
-        menuAtual.IsOpen = false;
     }
 }
