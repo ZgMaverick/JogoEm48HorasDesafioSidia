@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 9063526102476945581}
   - component: {fileID: 6336785054430427381}
   m_Layer: 0
-  m_Name: Peon
+  m_Name: lancer Peon
   m_TagString: Peon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

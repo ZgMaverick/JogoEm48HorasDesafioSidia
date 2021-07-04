@@ -4,18 +4,19 @@ using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
-    public GameObject cube;
-    public GameObject peon;
+    public GameObject [] objetos;
+    public GameObject [] peon;
     private GameObject[] cubeVectorStorage;
     private GameObject[,] cube2dVectorStorage;
     private int[,] virtualBoard;
     private int numeroCasas;
     PeonData peonData;
     CubeData cubeData;
+    PickupData pickupData;
     public Camera Maincamera;
     public GameManager gameManager;
-    public Material player1Mat;
-    public Material player2Mat;
+    public Material [] materiais;
+
 
     // Start is called before the first frame update
     void Start()
@@ -31,18 +32,20 @@ public class GridManager : MonoBehaviour
 
     public void CreateGrid(int numCasas)
     {   
+        //pegar dados
         GameObject cubeTemp;
         cube2dVectorStorage = new GameObject[numCasas, numCasas];
         cubeVectorStorage = new GameObject[numCasas * numCasas];
         virtualBoard = new int[numCasas, numCasas];
         int a = 0;
 
+        //criar cubos
         for (int i = 0; i < numCasas; ++i)
         {
             for (int j = 0; j < numCasas; ++j)
             {      
                 Vector3 spawnCubeLoc = new Vector3 (j,0,i) + Vector3.zero;
-                cubeTemp = Instantiate(cube, spawnCubeLoc, Quaternion.identity,this.transform);
+                cubeTemp = Instantiate(objetos[0], spawnCubeLoc, Quaternion.identity,this.transform);
                 var cubeData = cubeTemp.GetComponent<CubeData>();
                 cubeTemp.name = i + "." + j;
                 cubeData.CuboCordenada[0, 0] = i;
@@ -52,9 +55,10 @@ public class GridManager : MonoBehaviour
                 cube2dVectorStorage[i,j] = cubeTemp;       
             }
         }
+
+        //camera dinamica
         Vector3 camPos = new Vector3 (0,numCasas,0);
         Maincamera.transform.parent.position = ((cube2dVectorStorage[0, 0].transform.position + cube2dVectorStorage[numCasas - 1, numCasas - 1].transform.position) / 2);
-        //Debug.Log(camPos);
         Maincamera.transform.position += camPos;
         SpawnBoardObjects(numCasas);
     }
@@ -64,29 +68,33 @@ public class GridManager : MonoBehaviour
 
         
         GameObject peaoCriado;
-
+        GameObject pickupCriado;
         
+        //teste manual
         virtualBoard[0, numCasas / 2] = 1;
         virtualBoard[numCasas-1, numCasas/2] = 2;
-     
+        virtualBoard[0 + 1, numCasas / 2] = 3;
+        virtualBoard[0, numCasas / 2 + 1] = 4;
+        virtualBoard[0, numCasas / 2 - 1] = 5;
+        virtualBoard[0 + 1, numCasas / 2 - 1] = 6;
 
         for (int i = 0; i <= numCasas - 1; ++i)
         {
             for (int j = 0; j <= numCasas - 1; ++j)
             {
                 peaoCriado = null;
-                Vector3 posCubo = new Vector3(0, 0.90f, 0);
+                pickupCriado = null;
+                Vector3 posObjeto = new Vector3(0, 0.90f, 0);
                 switch (virtualBoard[i, j])
                 {
                     case 1:
 
-                        posCubo += cube2dVectorStorage[i, j].transform.position;
-                        peaoCriado = Instantiate(peon, posCubo, Quaternion.identity, cube2dVectorStorage[i, j].transform);
-                        peaoCriado.GetComponent<MeshRenderer>().material = player1Mat;
+                        //criar peao
+                        posObjeto += cube2dVectorStorage[i, j].transform.position;
+                        peaoCriado = Instantiate(peon[0], posObjeto, Quaternion.identity, cube2dVectorStorage[i, j].transform);
+                        peaoCriado.GetComponent<MeshRenderer>().material = materiais[0];
                         peonData = peaoCriado.GetComponent<PeonData>();
-
-                        //peao
-                        //peonData;
+                        //dar valor ao peao
                         peonData.Health = 3;
                         peonData.Move = 3;
                         peonData.Damage = 2;
@@ -94,23 +102,18 @@ public class GridManager : MonoBehaviour
                         peonData.PosicaoPeao[0, 0] = i;
                         peonData.PosicaoPeao[1, 0] = j;
                         peonData.Player = 1;
-                        //peonData.ReceiveDamage();
-
                         //cubo
                         cube2dVectorStorage[i, j].GetComponent<CubeData>().updateFill();
 
                         break;
                     case 2:
 
-                        posCubo += cube2dVectorStorage[i, j].transform.position;
-                        peaoCriado = Instantiate(peon, posCubo, Quaternion.identity, cube2dVectorStorage[i, j].transform);
-                        //if ();
-                        peaoCriado.GetComponent<MeshRenderer>().material = player2Mat;
+                        //criar peao
+                        posObjeto += cube2dVectorStorage[i, j].transform.position;
+                        peaoCriado = Instantiate(peon[0], posObjeto, Quaternion.identity, cube2dVectorStorage[i, j].transform);
+                        peaoCriado.GetComponent<MeshRenderer>().material = materiais[1];
                         peonData = peaoCriado.GetComponent<PeonData>();
-
-                        //peao
-
-                        //peonData.CreateStatus(3,3,2,2,i,j);
+                        //dar valor ao peao
                         peonData.Health = 3;
                         peonData.Move = 3;
                         peonData.Damage = 2;
@@ -118,10 +121,67 @@ public class GridManager : MonoBehaviour
                         peonData.PosicaoPeao[0, 0] = i;
                         peonData.PosicaoPeao[1, 0] = j;
                         peonData.Player = 2;
-                        //peonData.ReceiveDamage();
-
                         //cubo
+                        cube2dVectorStorage[i, j].GetComponent<CubeData>().updateFill();
 
+                        break;
+                    case 3:
+
+                        //criar objeto
+                        posObjeto += cube2dVectorStorage[i, j].transform.position;
+                        pickupCriado = Instantiate(objetos[1], posObjeto, Quaternion.identity, cube2dVectorStorage[i, j].transform);
+                        pickupData = pickupCriado.GetComponent<PickupData>();
+                        //dar valor
+                        pickupData.BonusBattle = 1;
+                        pickupData.BonusCura = 0;
+                        pickupData.BonusMove = 0;
+                        pickupData.BonusDice = 0;
+                        //cubo
+                        cube2dVectorStorage[i, j].GetComponent<CubeData>().updateFill();
+
+                        break;
+                    case 4:
+
+                        //criar objeto
+                        posObjeto += cube2dVectorStorage[i, j].transform.position;
+                        pickupCriado = Instantiate(objetos[2], posObjeto, Quaternion.identity, cube2dVectorStorage[i, j].transform);
+                        pickupData = pickupCriado.GetComponent<PickupData>();
+                        //dar valor
+                        pickupData.BonusBattle = 0;
+                        pickupData.BonusCura = 0;
+                        pickupData.BonusMove = 0;
+                        pickupData.BonusDice = 1;
+                        //cubo
+                        cube2dVectorStorage[i, j].GetComponent<CubeData>().updateFill();
+
+                        break;
+                    case 5:
+
+                        //criar objeto
+                        posObjeto += cube2dVectorStorage[i, j].transform.position;
+                        pickupCriado = Instantiate(objetos[3], posObjeto, Quaternion.identity, cube2dVectorStorage[i, j].transform);
+                        pickupData = pickupCriado.GetComponent<PickupData>();
+                        //dar valor
+                        pickupData.BonusBattle = 0;
+                        pickupData.BonusCura = 0;
+                        pickupData.BonusMove = 1;
+                        pickupData.BonusDice = 0;
+                        //cubo
+                        cube2dVectorStorage[i, j].GetComponent<CubeData>().updateFill();
+
+                        break;
+                    case 6:
+
+                        //criar objeto
+                        posObjeto += cube2dVectorStorage[i, j].transform.position;
+                        pickupCriado = Instantiate(objetos[4], posObjeto, Quaternion.identity, cube2dVectorStorage[i, j].transform);
+                        pickupData = pickupCriado.GetComponent<PickupData>();
+                        //dar valor
+                        pickupData.BonusBattle = 0;
+                        pickupData.BonusCura = 1;
+                        pickupData.BonusMove = 0;
+                        pickupData.BonusDice = 0;
+                        //cubo
                         cube2dVectorStorage[i, j].GetComponent<CubeData>().updateFill();
 
                         break;
@@ -135,15 +195,18 @@ public class GridManager : MonoBehaviour
 
     public void PrepareMov(GameObject peonTemp)
     {
+        //get data
         peonData = peonTemp.GetComponent<PeonData>();
         int movimento = peonData.Move;
         int posPeaoCol = peonData.PosicaoPeao[0, 0];
         int posPeaoLin = peonData.PosicaoPeao[1, 0];
+        //deixar cor normal / desabilitar todos
         foreach (GameObject a in cubeVectorStorage)
         {
             a.GetComponent<BoxCollider>().enabled = false;
             a.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 1);
         }
+        //trocar cor / habilitar movimentos possiveis
         for (int i = -movimento; i <= movimento; ++i)
         {
             for (int j = -movimento; j <= movimento; ++j)
@@ -159,15 +222,18 @@ public class GridManager : MonoBehaviour
 
     public void PrepareAtk(GameObject peonTemp)
     {
+        //get data
         peonData = peonTemp.GetComponent<PeonData>();
         int atkRange = peonData.AtkRange;
         int posPeaoCol = peonData.PosicaoPeao[0, 0];
         int posPeaoLin = peonData.PosicaoPeao[1, 0];
+        //deixar cor normal / desabilitar todos
         foreach (GameObject a in cubeVectorStorage)
         {
             a.GetComponent<BoxCollider>().enabled = false;
             a.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 1);
         }
+        //trocar cor / habilitar batalhas possiveis
         for (int i = -atkRange; i <= atkRange; ++i)
         {
             for (int j = -atkRange; j <= atkRange; ++j)
@@ -180,6 +246,44 @@ public class GridManager : MonoBehaviour
             }
         }
     }
+
+    public void LimparTabuleiro()
+    {
+        foreach (GameObject a in cubeVectorStorage)
+        {
+            a.GetComponent<BoxCollider>().enabled = true;
+            a.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 1);
+        }
+    }
+
+    public void pickUpPickup(GameObject peaoTemp, GameObject pickUpTemp)
+    {
+        //realisar ajuste valores
+        var pickupData = pickUpTemp.GetComponent<PickupData>();
+        var peaoData = peaoTemp.GetComponent<PeonData>();
+
+        if(pickupData.BonusDice > 0)
+        { 
+        gameManager.NumberDice += pickupData.BonusDice;
+            Debug.Log("Mais " + pickupData.BonusDice + " Dado(s) de Acerto!");
+        }
+        if (pickupData.BonusBattle > 0)
+        {
+            gameManager.BattleAmount += pickupData.BonusBattle;
+            Debug.Log("Mais " + pickupData.BonusBattle + " Fase(s) de Batalha!");
+        }
+        if (pickupData.BonusMove > 0)
+        {
+            gameManager.MoveAmount += pickupData.BonusMove;
+            Debug.Log("Mais " + pickupData.BonusMove + " Fase(s) de Movimento!");
+        }
+        if (pickupData.BonusCura > 0)
+        {
+            peaoData.Health += pickupData.BonusCura;
+            Debug.Log("O peao foi curado em: " + pickupData.BonusCura);
+        }
+    }
+
     public void Movimento (GameObject peaoTemp, GameObject cuboTemp, GameObject cuboPeao)
     {
         StartCoroutine(PeonMoveAnim(peaoTemp, cuboTemp, cuboPeao));
@@ -187,6 +291,10 @@ public class GridManager : MonoBehaviour
 
     public void Ataque(GameObject peaoTemp, GameObject alvoTemp, GameObject cuboTemp)
     {
+        //tirar batalha
+        gameManager.BattleAmount--;
+
+        //pegar data
         int[] player1Atk = new int[gameManager.NumberDice];
         int[] player2Atk = new int[3];
         int vida = alvoTemp.GetComponent<PeonData>().Health;
@@ -194,6 +302,7 @@ public class GridManager : MonoBehaviour
         int numDice = gameManager.NumberDice;
         int atkOk=0;
 
+        //rolar dados
         for (int i = 0; i < numDice; i++)
         {
             player1Atk[i] = Random.Range(1, 7);
@@ -203,18 +312,17 @@ public class GridManager : MonoBehaviour
                 player2Atk[i] = Random.Range(1, 7);
             }
         }
-
         System.Array.Sort(player1Atk);
         System.Array.Sort(player2Atk);
-
+        //realisar batalha
         for (int i = 0; i < numDice; i++){ 
             
-            Debug.Log("|P1: " + player1Atk[numDice-1-i] + "|  vs  |" + "P2: " + player2Atk[2-i] + "|");
-            if (player1Atk[numDice - 1 - i] >= player2Atk[2 - i]){
+            Debug.Log("|P1: " + player1Atk[numDice+(-i -1)] + "|  vs  |" + "P2: " + player2Atk[2-i] + "|");
+            if (player1Atk[numDice + (-i - 1)] >= player2Atk[2 - i]){
                 atkOk++;
             }
         }
-        
+        //resutado batalha
         if (atkOk>=2)
         {
             vida = vida - dano;
@@ -241,32 +349,38 @@ public class GridManager : MonoBehaviour
         }
 
         //gamemanager
-        gameManager.BattleAmount--;
-        Debug.Log(gameManager.BattleAmount + " Batalha(s) Sobrando!");
+        if (gameManager.BattleAmount > 0) Debug.Log(gameManager.BattleAmount + " Batalha(s) Sobrando!");
+        else Debug.Log("Batalha acabada");
         gameManager.BattlePhase = false;
         gameManager.endTurnCheck();
     }
 
     IEnumerator PeonMoveAnim(GameObject peaoTemp, GameObject cuboTemp, GameObject cuboPeao)
     {
+        //tirar acao
+        gameManager.MoveAmount--;
+
+        //pegar data
         peonData = peaoTemp.GetComponent<PeonData>();
         cubeData = cuboTemp.GetComponent<CubeData>();
-
         float elapsedTime = 0;
         float waitTime = 0.5f;
         Vector3 peaoPos = peaoTemp.transform.position;
         Vector3 cuboPos = cuboTemp.transform.position;
         Vector3 up = new Vector3(0, 0.90f, 0);
 
+        //movimento
         while (elapsedTime < waitTime)
         {
             peaoTemp.transform.position = Vector3.Lerp(peaoPos, cuboPos+up, (elapsedTime / waitTime));
             elapsedTime += Time.deltaTime;
-            //Debug.Log(peaoTemp.transform.position);
-            //Debug.Log(elapsedTime);
             yield return null;
         }
-
+        //destruir pickup caso tenha
+        foreach(Transform child in cuboTemp.transform)
+        {
+            Destroy(child.gameObject);
+        }
         //cubo
         peaoTemp.transform.parent = cuboTemp.transform;
         cuboPeao.GetComponent<CubeData>().updateFill();
@@ -282,8 +396,8 @@ public class GridManager : MonoBehaviour
         peonData.PosicaoPeao[1, 0] = cubeData.CuboCordenada[1, 0];
 
         //gameManager
-        gameManager.MoveAmount--;
-        Debug.Log(gameManager.MoveAmount + " Movimento(s) Sobrando!");
+        if (gameManager.MoveAmount > 0) Debug.Log(gameManager.MoveAmount + " Movimento(s) Sobrando!");
+        else Debug.Log("Movimento acabado");
         gameManager.MovePhase = false;
         gameManager.endTurnCheck();
     }
