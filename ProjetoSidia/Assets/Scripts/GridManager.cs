@@ -10,6 +10,8 @@ public class GridManager : MonoBehaviour
     private GameObject[,] cube2dVectorStorage;
     private int[,] virtualBoard;
     private int numeroCasas;
+    private int numMaxObjetos;
+    private int numObjetos;
     PeonData peonData;
     CubeData cubeData;
     PickupData pickupData;
@@ -44,6 +46,7 @@ public class GridManager : MonoBehaviour
         {
             for (int j = 0; j < numCasas; ++j)
             {
+                Debug.Log("mine");
                 Vector3 spawnCubeLoc = new Vector3(j, 0, i) + Vector3.zero;
                 cubeTemp = Instantiate(objetos[0], spawnCubeLoc, Quaternion.identity, this.transform);
                 var cubeData = cubeTemp.GetComponent<CubeData>();
@@ -60,25 +63,22 @@ public class GridManager : MonoBehaviour
         Vector3 camPos = new Vector3(0, numCasas, 0);
         Maincamera.transform.parent.position = ((cube2dVectorStorage[0, 0].transform.position + cube2dVectorStorage[numCasas - 1, numCasas - 1].transform.position) / 2);
         Maincamera.transform.position += camPos;
-        PreparePeonSpawn(numCasas, playerTurn);
-        //SpawnBoardObjects(numCasas);
+        PreparePeonSpawn(playerTurn);
     }
 
-    public void PreparePeonSpawn(int numCasas, int playerTurn)
-    {   
-        int possibleSlot = numCasas / 3;
+    public void PreparePeonSpawn(int playerTurn)
+    {
+        Debug.Log("Player " + playerTurn + " escolha aonde colocar o seu peao");
+        int possibleSlot = numeroCasas / 3;
         possibleSlot = Mathf.CeilToInt(possibleSlot);
 
-        foreach (GameObject a in cubeVectorStorage)
-        {
-            a.GetComponent<BoxCollider>().enabled = false;
-            a.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 1);
-        }
+        DesabilitarTabuleiro();
+
         if (playerTurn == 2)
         {
-            for (int i = numCasas -1 ; i >= numCasas - possibleSlot; --i)
+            for (int i = numeroCasas - 1 ; i >= numeroCasas - possibleSlot; --i)
             {
-                for (int j = 0; j <= numCasas - 1; ++j)
+                for (int j = 0; j <= numeroCasas - 1; ++j)
                 {
                     cube2dVectorStorage[i, j].GetComponent<BoxCollider>().enabled = true;
                     cube2dVectorStorage[i, j].GetComponent<Renderer>().material.color = new Color(0.25f, 0.50f, 0, 1);  
@@ -90,7 +90,7 @@ public class GridManager : MonoBehaviour
         {
             for (int i = 0; i < possibleSlot; ++i)
             {
-                for (int j = 0; j <= numCasas-1; ++j)
+                for (int j = 0; j <= numeroCasas - 1; ++j)
                 {
                     cube2dVectorStorage[i, j].GetComponent<BoxCollider>().enabled = true;
                     cube2dVectorStorage[i, j].GetComponent<Renderer>().material.color = new Color(0, 0.50f, 0.25f, 1);
@@ -113,16 +113,19 @@ public class GridManager : MonoBehaviour
                 //criar peao
                 posObjeto += cubeTemp.transform.position;
                 peaoCriado = Instantiate(peon[0], posObjeto, Quaternion.identity, cubeTemp.transform);
-                peaoCriado.GetComponent<MeshRenderer>().material = materiais[0];
+                if (gameManager.TurnoJogador == 1) peaoCriado.GetComponent<MeshRenderer>().material = materiais[0];
+                else peaoCriado.GetComponent<MeshRenderer>().material = materiais[1];
                 peonData = peaoCriado.GetComponent<PeonData>();
                 //dar valor ao peao
                 peonData.Health = 3;
                 peonData.Move = 3;
                 peonData.Damage = 2;
                 peonData.AtkRange = 2;
-                //peonData.PosicaoPeao[0, 0] = i;
-                //peonData.PosicaoPeao[1, 0] = j;
-                peonData.Player = 1;
+                virtualBoard[cubeTemp.GetComponent<CubeData>().CuboCordenada[0, 0], cubeTemp.GetComponent<CubeData>().CuboCordenada[1, 0]] = 5;
+                peonData.PosicaoPeao[0, 0] = cubeTemp.GetComponent<CubeData>().CuboCordenada[0, 0];
+                peonData.PosicaoPeao[1, 0] = cubeTemp.GetComponent<CubeData>().CuboCordenada[1, 0];
+                if (gameManager.TurnoJogador == 1) peonData.Player = 1;
+                else peonData.Player = 2;
                 //cubo
                 cubeTemp.GetComponent<CubeData>().updateFill();
 
@@ -132,16 +135,19 @@ public class GridManager : MonoBehaviour
                 //criar peao
                 posObjeto += cubeTemp.transform.position;
                 peaoCriado = Instantiate(peon[0], posObjeto, Quaternion.identity, cubeTemp.transform);
-                peaoCriado.GetComponent<MeshRenderer>().material = materiais[1];
+                if (gameManager.TurnoJogador == 1) peaoCriado.GetComponent<MeshRenderer>().material = materiais[0];
+                else peaoCriado.GetComponent<MeshRenderer>().material = materiais[1];
                 peonData = peaoCriado.GetComponent<PeonData>();
                 //dar valor ao peao
                 peonData.Health = 3;
                 peonData.Move = 3;
                 peonData.Damage = 2;
                 peonData.AtkRange = 2;
-                //peonData.PosicaoPeao[0, 0] = i;
-                //peonData.PosicaoPeao[1, 0] = j;
-                peonData.Player = 2;
+                virtualBoard[cubeTemp.GetComponent<CubeData>().CuboCordenada[0, 0], cubeTemp.GetComponent<CubeData>().CuboCordenada[1, 0]] = 5;
+                peonData.PosicaoPeao[0, 0] = cubeTemp.GetComponent<CubeData>().CuboCordenada[0, 0];
+                peonData.PosicaoPeao[1, 0] = cubeTemp.GetComponent<CubeData>().CuboCordenada[1, 0];
+                if (gameManager.TurnoJogador == 1) peonData.Player = 1;
+                else peonData.Player = 2;
                 //cubo
                 cubeTemp.GetComponent<CubeData>().updateFill();
                 break;
@@ -150,21 +156,32 @@ public class GridManager : MonoBehaviour
                 //criar peao
                 posObjeto += cubeTemp.transform.position;
                 peaoCriado = Instantiate(peon[0], posObjeto, Quaternion.identity, cubeTemp.transform);
-                peaoCriado.GetComponent<MeshRenderer>().material = materiais[1];
+                if (gameManager.TurnoJogador == 1) peaoCriado.GetComponent<MeshRenderer>().material = materiais[0];
+                else peaoCriado.GetComponent<MeshRenderer>().material = materiais[1];
                 peonData = peaoCriado.GetComponent<PeonData>();
                 //dar valor ao peao
                 peonData.Health = 3;
                 peonData.Move = 3;
                 peonData.Damage = 2;
                 peonData.AtkRange = 2;
-                //peonData.PosicaoPeao[0, 0] = i;
-                //peonData.PosicaoPeao[1, 0] = j;
-                peonData.Player = 2;
+                virtualBoard[cubeTemp.GetComponent<CubeData>().CuboCordenada[0, 0], cubeTemp.GetComponent<CubeData>().CuboCordenada[1, 0]] = 5;
+                peonData.PosicaoPeao[0, 0] = cubeTemp.GetComponent<CubeData>().CuboCordenada[0, 0]; 
+                peonData.PosicaoPeao[1, 0] = cubeTemp.GetComponent<CubeData>().CuboCordenada[1, 0];
+                if (gameManager.TurnoJogador == 1) peonData.Player = 1;
+                else peonData.Player = 2;
                 //cubo
                 cubeTemp.GetComponent<CubeData>().updateFill();
                 break;
            default:
                 break;
+        }
+        if (gameManager.TurnoJogador == 1) gameManager.TurnoJogador = 2;
+        else gameManager.TurnoJogador = 1;
+        if (gameManager.SpawnAmount > 0) PreparePeonSpawn(gameManager.TurnoJogador);
+        else {
+            gameManager.SpawnPhase = false;
+            LimparTabuleiro();
+            SpawnBoardObjects(numeroCasas);
         }
     }
 
@@ -173,17 +190,19 @@ public class GridManager : MonoBehaviour
         GameObject pickupCriado;
 
         //teste manual
-        virtualBoard[0, numCasas / 2] = 1;
-        virtualBoard[numCasas - 1, numCasas / 2] = 2;
-
         for (int i = 0; i <= numCasas - 1; ++i)
         {
             for (int j = 0; j <= numCasas - 1; ++j)
             {
                 if (virtualBoard[i, j] != 1 && virtualBoard[i, j] != 2)
-                    if (Random.Range(1, 101) <= 50)
-                        virtualBoard[i, j] = Random.Range(3, 7);
-            }
+                    if (Random.Range(1, 101) <= 30)
+                        if (virtualBoard[i, j] == 0)
+                        {
+                            virtualBoard[i, j] = Random.Range(1, 5);
+                            numMaxObjetos++;
+                            numObjetos++;
+                        }
+}
         }
 
         for (int i = 0; i <= numCasas - 1; ++i)
@@ -194,47 +213,8 @@ public class GridManager : MonoBehaviour
                 pickupCriado = null;
                 Vector3 posObjeto = new Vector3(0, 0.90f, 0);
                 switch (virtualBoard[i, j])
-                {/*
+                {
                     case 1:
-                    
-                        //criar peao
-                        posObjeto += cube2dVectorStorage[i, j].transform.position;
-                        peaoCriado = Instantiate(peon[0], posObjeto, Quaternion.identity, cube2dVectorStorage[i, j].transform);
-                        peaoCriado.GetComponent<MeshRenderer>().material = materiais[0];
-                        peonData = peaoCriado.GetComponent<PeonData>();
-                        //dar valor ao peao
-                        peonData.Health = 3;
-                        peonData.Move = 3;
-                        peonData.Damage = 2;
-                        peonData.AtkRange = 2;
-                        peonData.PosicaoPeao[0, 0] = i;
-                        peonData.PosicaoPeao[1, 0] = j;
-                        peonData.Player = 1;
-                        //cubo
-                        cube2dVectorStorage[i, j].GetComponent<CubeData>().updateFill();
-
-                        break;
-                    case 2:
-
-                        //criar peao
-                        posObjeto += cube2dVectorStorage[i, j].transform.position;
-                        peaoCriado = Instantiate(peon[0], posObjeto, Quaternion.identity, cube2dVectorStorage[i, j].transform);
-                        peaoCriado.GetComponent<MeshRenderer>().material = materiais[1];
-                        peonData = peaoCriado.GetComponent<PeonData>();
-                        //dar valor ao peao
-                        peonData.Health = 3;
-                        peonData.Move = 3;
-                        peonData.Damage = 2;
-                        peonData.AtkRange = 2;
-                        peonData.PosicaoPeao[0, 0] = i;
-                        peonData.PosicaoPeao[1, 0] = j;
-                        peonData.Player = 2;
-                        //cubo
-                        cube2dVectorStorage[i, j].GetComponent<CubeData>().updateFill();
-
-                        break;
-                        */
-                    case 3:
 
                         //criar objeto
                         posObjeto += cube2dVectorStorage[i, j].transform.position;
@@ -255,7 +235,7 @@ public class GridManager : MonoBehaviour
                         cube2dVectorStorage[i, j].GetComponent<CubeData>().updateFill();
 
                         break;
-                    case 4:
+                    case 2:
 
                         //criar objeto
                         posObjeto += cube2dVectorStorage[i, j].transform.position;
@@ -276,7 +256,7 @@ public class GridManager : MonoBehaviour
                         cube2dVectorStorage[i, j].GetComponent<CubeData>().updateFill();
 
                         break;
-                    case 5:
+                    case 3:
 
                         //criar objeto
                         posObjeto += cube2dVectorStorage[i, j].transform.position;
@@ -297,7 +277,7 @@ public class GridManager : MonoBehaviour
                         cube2dVectorStorage[i, j].GetComponent<CubeData>().updateFill();
 
                         break;
-                    case 6:
+                    case 4:
 
                         //criar objeto
                         posObjeto += cube2dVectorStorage[i, j].transform.position;
@@ -334,11 +314,7 @@ public class GridManager : MonoBehaviour
         int posPeaoCol = peonData.PosicaoPeao[0, 0];
         int posPeaoLin = peonData.PosicaoPeao[1, 0];
         //deixar cor normal / desabilitar todos
-        foreach (GameObject a in cubeVectorStorage)
-        {
-            a.GetComponent<BoxCollider>().enabled = false;
-            a.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 1);
-        }
+        DesabilitarTabuleiro();
         //trocar cor / habilitar movimentos possiveis
         for (int i = -movimento; i <= movimento; ++i)
         {
@@ -361,11 +337,7 @@ public class GridManager : MonoBehaviour
         int posPeaoCol = peonData.PosicaoPeao[0, 0];
         int posPeaoLin = peonData.PosicaoPeao[1, 0];
         //deixar cor normal / desabilitar todos
-        foreach (GameObject a in cubeVectorStorage)
-        {
-            a.GetComponent<BoxCollider>().enabled = false;
-            a.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 1);
-        }
+        DesabilitarTabuleiro();
         //trocar cor / habilitar batalhas possiveis
         for (int i = -atkRange; i <= atkRange; ++i)
         {
@@ -385,6 +357,14 @@ public class GridManager : MonoBehaviour
         foreach (GameObject a in cubeVectorStorage)
         {
             a.GetComponent<BoxCollider>().enabled = true;
+            a.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 1);
+        }
+    }
+    public void DesabilitarTabuleiro()
+    {
+        foreach (GameObject a in cubeVectorStorage)
+        {
+            a.GetComponent<BoxCollider>().enabled = false;
             a.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 1);
         }
     }
@@ -414,6 +394,11 @@ public class GridManager : MonoBehaviour
         {
             peaoData.Health += pickupData.BonusCura;
             Debug.Log("O peao foi curado em: " + pickupData.BonusCura);
+        }
+        numObjetos--;
+        if (numObjetos == numMaxObjetos / 10)
+        {
+
         }
     }
 

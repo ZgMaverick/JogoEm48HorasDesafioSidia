@@ -15,7 +15,8 @@ public class GameManager : MonoBehaviour
     private int numberDice = 3;
     private int turnoJogador = 1;
     private bool spawnPhase = true;
-    private int spawnAmount = 4;
+    private int spawnAmount = 6;
+    private bool mouseLock = false;
 
     GameObject cuboPeao;
     GameObject peao;
@@ -29,6 +30,9 @@ public class GameManager : MonoBehaviour
     public bool BattlePhase { get => battlePhase; set => battlePhase = value; }
     public int NumberDice { get => numberDice; set => numberDice = value; }
     public int TurnoJogador { get => turnoJogador; set => turnoJogador = value; }
+    public bool SpawnPhase { get => spawnPhase; set => spawnPhase = value; }
+    public int SpawnAmount { get => spawnAmount; set => spawnAmount = value; }
+    public bool MouseLock { get => mouseLock; set => mouseLock = value; }
 
     void awake()
     {
@@ -50,7 +54,7 @@ public class GameManager : MonoBehaviour
         //Selecionar peao para movimentar /usar para movimento /usar para batalha
         if (Input.GetMouseButtonDown(0))
         {
-            if (spawnPhase == false)
+            if (SpawnPhase == false)
             {
                 if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().cuboFillId == 1 && MoveAmount > 0 && MovePhase == false)
                 {
@@ -85,17 +89,24 @@ public class GameManager : MonoBehaviour
             }
             else
             {
+                if (0 >= SpawnAmount)
+                {
+                    SpawnPhase = false;
+                    gridManager.LimparTabuleiro();
+                }
                 if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().cuboFillId == 0)
                 {
+                    SpawnAmount--;
                     cubo = hit.transform.gameObject;
-                    gridManager.SpawnPlayerPeons(cubo,turnoJogador,1);
+                    gridManager.SpawnPlayerPeons(cubo, turnoJogador, 1);    
+                    
                 }
             }
         }
         //Selecionar peao para batalha
         if (Input.GetMouseButtonDown(1))
         {
-            if (spawnPhase == false)
+            if (SpawnPhase == false)
             {
                 if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().cuboFillId == 1 && BattleAmount > 0 && BattlePhase == false)
                 {
@@ -130,10 +141,8 @@ public class GameManager : MonoBehaviour
             NumberDice = 3;
             BattlePhase = false;
             MovePhase = false;
-            if (TurnoJogador == 1)
-                TurnoJogador = 2;
-            else
-                TurnoJogador = 1;
+            if (TurnoJogador == 1)TurnoJogador = 2;
+            else TurnoJogador = 1;
 
         }
     }
