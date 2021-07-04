@@ -53,9 +53,9 @@ public class GridManager : MonoBehaviour
             }
         }
         Vector3 camPos = new Vector3 (0,numCasas,0);
-        camPos += ((cube2dVectorStorage[0, 0].transform.position + cube2dVectorStorage[numCasas - 1, numCasas - 1].transform.position) / 2);
+        Maincamera.transform.parent.position = ((cube2dVectorStorage[0, 0].transform.position + cube2dVectorStorage[numCasas - 1, numCasas - 1].transform.position) / 2);
         //Debug.Log(camPos);
-        Maincamera.transform.position = camPos;
+        Maincamera.transform.position += camPos;
         SpawnBoardObjects(numCasas);
     }
 
