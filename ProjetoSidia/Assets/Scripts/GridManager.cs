@@ -301,7 +301,7 @@ public class GridManager : MonoBehaviour
         int dano = peaoTemp.GetComponent<PeonData>().Damage;
         int numDice = gameManager.NumberDice;
         int atkOk=0;
-
+        Debug.Log(numDice);
         //rolar dados
         for (int i = 0; i < numDice; i++)
         {
@@ -315,8 +315,8 @@ public class GridManager : MonoBehaviour
         System.Array.Sort(player1Atk);
         System.Array.Sort(player2Atk);
         //realisar batalha
-        for (int i = 0; i < numDice; i++){ 
-            
+        for (int i = 0; i < 3; i++){
+            //Debug.Log(numDice + (-i - 1));
             Debug.Log("|P1: " + player1Atk[numDice+(-i -1)] + "|  vs  |" + "P2: " + player2Atk[2-i] + "|");
             if (player1Atk[numDice + (-i - 1)] >= player2Atk[2 - i]){
                 atkOk++;
@@ -328,8 +328,8 @@ public class GridManager : MonoBehaviour
             vida = vida - dano;
             if (vida < 0) vida = 0;
             Debug.Log("ATAQUE CONECTOU!!!!");
-            Debug.Log("oponente leva " + dano + " de dano");
-            if (vida > 0) Debug.Log("oponente ainda tem mais " + vida + " de vida");
+            Debug.Log("Oponente leva " + dano + " de dano!");
+            if (vida > 0) Debug.Log("Oponente ainda tem mais " + vida + " de vida");
         }
         else
         {

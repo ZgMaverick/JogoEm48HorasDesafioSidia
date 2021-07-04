@@ -61,7 +61,6 @@ public class GameManager : MonoBehaviour
                 if (cubo.transform.childCount != 0)
                 {
                     pickUp = cubo.transform.GetChild(0).gameObject;
-                    Debug.Log("hey");
                     gridManager.pickUpPickup(peao, pickUp);
                 }
                 gridManager.Movimento(peao, cubo, cuboPeao);
