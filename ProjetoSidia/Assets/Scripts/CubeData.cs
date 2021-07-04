@@ -27,13 +27,13 @@ public class CubeData : MonoBehaviour
     {
         foreach (Transform child in transform)
         {
-            if (child.tag == "Peon")
-            {
-                cuboFillId = 1;
-            }
-            else if (child.tag == "Pickup")
+            if (child.tag == "Pickup")
             {
                 cuboFillId = 2;
+            }
+            else if(child.tag == "Peon")
+            {
+                cuboFillId = 1;
             }
             else
             {

@@ -53,8 +53,8 @@ public class GridManager : MonoBehaviour
             }
         }
         Vector3 camPos = new Vector3 (0,numCasas,0);
-          camPos += ((cube2dVectorStorage[0, 0].transform.position + cube2dVectorStorage[numCasas - 1, numCasas - 1].transform.position) / 2);
-        Debug.Log(camPos);
+        camPos += ((cube2dVectorStorage[0, 0].transform.position + cube2dVectorStorage[numCasas - 1, numCasas - 1].transform.position) / 2);
+        //Debug.Log(camPos);
         Maincamera.transform.position = camPos;
         SpawnBoardObjects(numCasas);
     }
@@ -185,6 +185,68 @@ public class GridManager : MonoBehaviour
         StartCoroutine(PeonMoveAnim(peaoTemp, cuboTemp, cuboPeao));
     }
 
+    public void Ataque(GameObject peaoTemp, GameObject alvoTemp, GameObject cuboTemp)
+    {
+        int[] player1Atk = new int[gameManager.NumberDice];
+        int[] player2Atk = new int[3];
+        int vida = alvoTemp.GetComponent<PeonData>().Health;
+        int dano = peaoTemp.GetComponent<PeonData>().Damage;
+        int numDice = gameManager.NumberDice;
+        int atkOk=0;
+
+        for (int i = 0; i < numDice; i++)
+        {
+            player1Atk[i] = Random.Range(1, 7);
+
+            if (i < 3)
+            {
+                player2Atk[i] = Random.Range(1, 7);
+            }
+        }
+
+        System.Array.Sort(player1Atk);
+        System.Array.Sort(player2Atk);
+
+        for (int i = 0; i < numDice; i++){ 
+            
+            Debug.Log("|P1: " + player1Atk[numDice-1-i] + "|  vs  |" + "P2: " + player2Atk[2-i] + "|");
+            if (player1Atk[numDice - 1 - i] >= player2Atk[2 - i]){
+                atkOk++;
+            }
+        }
+        
+        if (atkOk>=2)
+        {
+            vida = vida - dano;
+            if (vida < 0) vida = 0;
+            Debug.Log("ATAQUE CONECTOU!!!!");
+            Debug.Log("oponente leva " + dano + " de dano");
+            if (vida > 0) Debug.Log("oponente ainda tem mais " + vida + " de vida");
+        }
+        else
+        {
+            Debug.Log("ataque desviado!");
+        }
+
+        //peao
+        alvoTemp.GetComponent<PeonData>().Health = vida;
+        alvoTemp.GetComponent<PeonData>().Checkhealth();
+
+        //cubos
+        cuboTemp.GetComponent<CubeData>().updateFill();
+        foreach (GameObject a in cubeVectorStorage)
+        {
+            a.GetComponent<BoxCollider>().enabled = true;
+            a.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 1);
+        }
+
+        //gamemanager
+        gameManager.BattleAmount--;
+        Debug.Log(gameManager.BattleAmount + " Batalha(s) Sobrando!");
+        gameManager.BattlePhase = false;
+        gameManager.endTurnCheck();
+    }
+
     IEnumerator PeonMoveAnim(GameObject peaoTemp, GameObject cuboTemp, GameObject cuboPeao)
     {
         peonData = peaoTemp.GetComponent<PeonData>();
@@ -200,8 +262,8 @@ public class GridManager : MonoBehaviour
         {
             peaoTemp.transform.position = Vector3.Lerp(peaoPos, cuboPos+up, (elapsedTime / waitTime));
             elapsedTime += Time.deltaTime;
-            Debug.Log(peaoTemp.transform.position);
-            Debug.Log(elapsedTime);
+            //Debug.Log(peaoTemp.transform.position);
+            //Debug.Log(elapsedTime);
             yield return null;
         }
 
@@ -216,13 +278,13 @@ public class GridManager : MonoBehaviour
         }
         //peao
 
-        Debug.Log("najbsoadbasodfbas");
         peonData.PosicaoPeao[0, 0] = cubeData.CuboCordenada[0, 0];
         peonData.PosicaoPeao[1, 0] = cubeData.CuboCordenada[1, 0];
 
         //gameManager
         gameManager.MoveAmount--;
+        Debug.Log(gameManager.MoveAmount + " Movimento(s) Sobrando!");
         gameManager.MovePhase = false;
-        //start atk phase
+        gameManager.endTurnCheck();
     }
 }

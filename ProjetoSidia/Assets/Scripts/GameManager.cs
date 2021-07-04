@@ -12,16 +12,19 @@ public class GameManager : MonoBehaviour
     private int battleAmount = 1;
     private bool movePhase = false;
     private bool battlePhase = false;
-    int numberDice = 3;
-    int turnoJogador = 1;
+    private int numberDice = 3;
+    private int turnoJogador = 1;
     GameObject cuboPeao;
     GameObject peao;
     GameObject cubo;
+    GameObject alvo;
 
     public int MoveAmount { get => moveAmount; set => moveAmount = value; }
     public int BattleAmount { get => battleAmount; set => battleAmount = value; }
     public bool MovePhase { get => movePhase; set => movePhase = value; }
     public bool BattlePhase { get => battlePhase; set => battlePhase = value; }
+    public int NumberDice { get => numberDice; set => numberDice = value; }
+    public int TurnoJogador { get => turnoJogador; set => turnoJogador = value; }
 
     // Start is called before the first frame update\
 
@@ -45,7 +48,7 @@ public class GameManager : MonoBehaviour
             {
                 cuboPeao = hit.transform.gameObject;
                 peao = cuboPeao.transform.GetChild(0).gameObject;
-                if (peao.GetComponent<PeonData>().Player == turnoJogador) {               
+                if (peao.GetComponent<PeonData>().Player == TurnoJogador) {               
                     //Debug.Log(peao.GetComponent<PeonData>().PosicaoPeao[0, 0] + peao.GetComponent<PeonData>().PosicaoPeao[1, 0]);
                     //Debug.Log(hit.transform.name);
                     gridManager.PrepareMov(peao);
@@ -58,16 +61,18 @@ public class GameManager : MonoBehaviour
                 
                 cubo = hit.transform.gameObject;
                 //Debug.Log(peao.GetComponent<PeonData>().PosicaoPeao[0, 0] + peao.GetComponent<PeonData>().PosicaoPeao[1, 0]);
-                Debug.Log(hit.transform.name);
+                //Debug.Log(hit.transform.name);
                 gridManager.Movimento(peao, cubo, cuboPeao);
 
             }
             if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().cuboFillId == 1 && BattleAmount > 0 && BattlePhase == true)
             {
+
                 cubo = hit.transform.gameObject;
+                alvo = cuboPeao.transform.GetChild(0).gameObject;
                 //Debug.Log(peao.GetComponent<PeonData>().PosicaoPeao[0, 0] + peao.GetComponent<PeonData>().PosicaoPeao[1, 0]);
-                Debug.Log(hit.transform.name);
-                //gridManager.Movimento(cubo);
+                //Debug.Log(hit.transform.name);
+                gridManager.Ataque(peao, alvo, cubo);
 
             }
 
@@ -78,7 +83,7 @@ public class GameManager : MonoBehaviour
             {
                 cuboPeao = hit.transform.gameObject;
                 peao = cuboPeao.transform.GetChild(0).gameObject;
-                if (peao.GetComponent<PeonData>().Player == turnoJogador)
+                if (peao.GetComponent<PeonData>().Player == TurnoJogador)
                 {
                     //Debug.Log(peao.GetComponent<PeonData>().PosicaoPeao[0, 0] + peao.GetComponent<PeonData>().PosicaoPeao[1, 0]);
                     //Debug.Log(hit.transform.name);
@@ -90,18 +95,9 @@ public class GameManager : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            if (turnoJogador == 1)
-            {
-                turnoJogador = 2;
-                moveAmount = 2;
-                battleAmount = 1;
-            }
-            else
-            {
-                turnoJogador = 1;
-                moveAmount = 2;
-                battleAmount = 1;
-            }
+            moveAmount = 0;
+            battleAmount = 0;
+            endTurnCheck();
             //Debug.Log(numeroCasas);
             //Debug.Log(singlePlayer);
             //Debug.Log(peao.transform.position);
@@ -109,6 +105,22 @@ public class GameManager : MonoBehaviour
             //Debug.Log(cubo.GetComponent<CubeData>().CuboFillId);
             //Debug.Log(cubo.GetComponent<CubeData>().CuboCordenada[0,0] + " " + cubo.GetComponent<CubeData>().CuboCordenada[1, 0]);
             //Debug.Log(posFnl);
+
+        }
+    }
+    public void endTurnCheck()
+    {
+        if(BattleAmount <= 0 && MoveAmount <=0)
+        {
+
+            MoveAmount = 2;
+            BattleAmount = 1;
+            NumberDice = 3;
+
+            if (TurnoJogador == 1)
+                TurnoJogador = 2;
+            else
+                TurnoJogador = 1;
 
         }
     }
