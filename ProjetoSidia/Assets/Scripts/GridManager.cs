@@ -73,10 +73,16 @@ public class GridManager : MonoBehaviour
         //teste manual
         virtualBoard[0, numCasas / 2] = 1;
         virtualBoard[numCasas-1, numCasas/2] = 2;
-        virtualBoard[0 + 1, numCasas / 2] = 3;
-        virtualBoard[0, numCasas / 2 + 1] = 4;
-        virtualBoard[0, numCasas / 2 - 1] = 5;
-        virtualBoard[0 + 1, numCasas / 2 - 1] = 6;
+
+        for (int i = 0; i <= numCasas - 1; ++i)
+        {
+            for (int j = 0; j <= numCasas - 1; ++j)
+            {
+                if (virtualBoard[i, j] != 1 && virtualBoard[i, j] != 2)
+                if (Random.Range(1,101) <=50)
+                virtualBoard[i, j] = Random.Range(3, 7);
+            }
+        }
 
         for (int i = 0; i <= numCasas - 1; ++i)
         {
@@ -132,10 +138,16 @@ public class GridManager : MonoBehaviour
                         pickupCriado = Instantiate(objetos[1], posObjeto, Quaternion.identity, cube2dVectorStorage[i, j].transform);
                         pickupData = pickupCriado.GetComponent<PickupData>();
                         //dar valor
-                        pickupData.BonusBattle = 1;
-                        pickupData.BonusCura = 0;
-                        pickupData.BonusMove = 0;
-                        pickupData.BonusDice = 0;
+                        //pickupData.BonusCura = 0;
+                        //pickupData.BonusMove = 0;
+                        //pickupData.BonusDice = 0;
+                        if (Random.Range(1, 100) < 90)
+                            pickupData.BonusBattle = 1;
+                        else
+                        {
+                            pickupData.BonusBattle = 2;
+                            pickupCriado.transform.GetChild(0).gameObject.SetActive(true);
+                        }
                         //cubo
                         cube2dVectorStorage[i, j].GetComponent<CubeData>().updateFill();
 
@@ -147,10 +159,16 @@ public class GridManager : MonoBehaviour
                         pickupCriado = Instantiate(objetos[2], posObjeto, Quaternion.identity, cube2dVectorStorage[i, j].transform);
                         pickupData = pickupCriado.GetComponent<PickupData>();
                         //dar valor
-                        pickupData.BonusBattle = 0;
-                        pickupData.BonusCura = 0;
-                        pickupData.BonusMove = 0;
+                        //pickupData.BonusBattle = 0;
+                        //pickupData.BonusCura = 0;
+                        //pickupData.BonusMove = 0;
+                        if(Random.Range(1,100) < 90)
                         pickupData.BonusDice = 1;
+                        else
+                        {
+                            pickupData.BonusDice = 2;
+                            pickupCriado.transform.GetChild(0).gameObject.SetActive(true);
+                        }
                         //cubo
                         cube2dVectorStorage[i, j].GetComponent<CubeData>().updateFill();
 
@@ -162,10 +180,16 @@ public class GridManager : MonoBehaviour
                         pickupCriado = Instantiate(objetos[3], posObjeto, Quaternion.identity, cube2dVectorStorage[i, j].transform);
                         pickupData = pickupCriado.GetComponent<PickupData>();
                         //dar valor
-                        pickupData.BonusBattle = 0;
-                        pickupData.BonusCura = 0;
-                        pickupData.BonusMove = 1;
-                        pickupData.BonusDice = 0;
+                        //pickupData.BonusBattle = 0;
+                        //pickupData.BonusCura = 0;
+                        //pickupData.BonusDice = 0;
+                        if (Random.Range(1, 100) < 90)
+                            pickupData.BonusMove = 1;
+                        else
+                        {
+                            pickupData.BonusMove = 2;
+                            pickupCriado.transform.GetChild(0).gameObject.SetActive(true);
+                        }
                         //cubo
                         cube2dVectorStorage[i, j].GetComponent<CubeData>().updateFill();
 
@@ -177,10 +201,16 @@ public class GridManager : MonoBehaviour
                         pickupCriado = Instantiate(objetos[4], posObjeto, Quaternion.identity, cube2dVectorStorage[i, j].transform);
                         pickupData = pickupCriado.GetComponent<PickupData>();
                         //dar valor
-                        pickupData.BonusBattle = 0;
-                        pickupData.BonusCura = 1;
-                        pickupData.BonusMove = 0;
-                        pickupData.BonusDice = 0;
+                        //pickupData.BonusBattle = 0;
+                        //pickupData.BonusMove = 0;
+                        //pickupData.BonusDice = 0;
+                        if (Random.Range(1, 100) < 90)
+                            pickupData.BonusCura = 1;
+                        else
+                        {
+                            pickupData.BonusCura = 2;
+                            pickupCriado.transform.GetChild(0).gameObject.SetActive(true);
+                        }
                         //cubo
                         cube2dVectorStorage[i, j].GetComponent<CubeData>().updateFill();
 
@@ -326,9 +356,11 @@ public class GridManager : MonoBehaviour
         if (atkOk>=2)
         {
             vida = vida - dano;
+            alvoTemp.GetComponent<PeonData>().Health = vida;
+            alvoTemp.GetComponent<PeonData>().Checkhealth();
             if (vida < 0) vida = 0;
             Debug.Log("ATAQUE CONECTOU!!!!");
-            Debug.Log("Oponente leva " + dano + " de dano!");
+            Debug.Log("Oponente leva " + dano + " de dano!");   
             if (vida > 0) Debug.Log("Oponente ainda tem mais " + vida + " de vida");
         }
         else
@@ -336,9 +368,7 @@ public class GridManager : MonoBehaviour
             Debug.Log("ataque desviado!");
         }
 
-        //peao
-        alvoTemp.GetComponent<PeonData>().Health = vida;
-        alvoTemp.GetComponent<PeonData>().Checkhealth();
+        
 
         //cubos
         cuboTemp.GetComponent<CubeData>().updateFill();
@@ -353,6 +383,7 @@ public class GridManager : MonoBehaviour
         else Debug.Log("Batalha acabada");
         gameManager.BattlePhase = false;
         gameManager.endTurnCheck();
+        
     }
 
     IEnumerator PeonMoveAnim(GameObject peaoTemp, GameObject cuboTemp, GameObject cuboPeao)
@@ -379,6 +410,7 @@ public class GridManager : MonoBehaviour
         //destruir pickup caso tenha
         foreach(Transform child in cuboTemp.transform)
         {
+            if (child.tag == "Pickup")
             Destroy(child.gameObject);
         }
         //cubo
@@ -400,5 +432,6 @@ public class GridManager : MonoBehaviour
         else Debug.Log("Movimento acabado");
         gameManager.MovePhase = false;
         gameManager.endTurnCheck();
+        
     }
 }

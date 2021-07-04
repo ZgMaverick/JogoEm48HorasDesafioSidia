@@ -44,14 +44,14 @@ public class GameManager : MonoBehaviour
         RaycastHit hit;
         //Selecionar peao para movimentar /usar para movimento /usar para batalha
         if (Input.GetMouseButtonDown(0)) {
-            if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().cuboFillId == 1 && MoveAmount>0 && MovePhase == false)
+            if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().cuboFillId == 1 && MoveAmount > 0 && MovePhase == false)
             {
                 cuboPeao = hit.transform.gameObject;
                 peao = cuboPeao.transform.GetChild(0).gameObject;
-                if (peao.GetComponent<PeonData>().Player == TurnoJogador) {               
+                if (peao.GetComponent<PeonData>().Player == TurnoJogador)
+                {
                     gridManager.PrepareMov(peao);
                     MovePhase = true;
-                    BattlePhase = false;
                 }
             }
             if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().cuboFillId != 1 && MovePhase == true)    
@@ -64,6 +64,7 @@ public class GameManager : MonoBehaviour
                     gridManager.pickUpPickup(peao, pickUp);
                 }
                 gridManager.Movimento(peao, cubo, cuboPeao);
+         
             }
             if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().cuboFillId == 1 && BattleAmount > 0 && BattlePhase == true)
             {
@@ -71,7 +72,7 @@ public class GameManager : MonoBehaviour
                 cubo = hit.transform.gameObject;
                 alvo = cuboPeao.transform.GetChild(0).gameObject;
                 gridManager.Ataque(peao, alvo, cubo);
-
+               
             }
 
         }
@@ -82,6 +83,7 @@ public class GameManager : MonoBehaviour
             {
                 cuboPeao = hit.transform.gameObject;
                 peao = cuboPeao.transform.GetChild(0).gameObject;
+                Debug.Log(TurnoJogador);
                 if (peao.GetComponent<PeonData>().Player == TurnoJogador)
                 {
                     gridManager.PrepareAtk(peao);
@@ -109,7 +111,6 @@ public class GameManager : MonoBehaviour
             NumberDice = 3;
             BattlePhase = false;
             MovePhase = false;
-
             if (TurnoJogador == 1)
                 TurnoJogador = 2;
             else
