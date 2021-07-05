@@ -9,6 +9,7 @@ public class GridManager : MonoBehaviour
     public GameObject tabuleiro;
     private GameObject[] cubeVectorStorage;
     private GameObject[,] cube2dVectorStorage;
+    public GameObject particulaSpawn;
     private int[,] virtualBoard;
     private int numeroCasas;
     private int numMaxObjetos;
@@ -102,7 +103,7 @@ public class GridManager : MonoBehaviour
 
     public void SpawnPlayerPeons(GameObject cubeTemp, int playerTurn, int peonType)
     {
-
+        GameObject particula = null;
         Vector3 posObjeto = new Vector3(0, 0.90f, 0);
         GameObject peaoCriado;
         audio[0].Play();
@@ -115,6 +116,8 @@ public class GridManager : MonoBehaviour
                 peaoCriado = Instantiate(peon[0], posObjeto, Quaternion.identity, cubeTemp.transform);
                 if (gameManager.TurnoJogador == 1) peaoCriado.GetComponent<MeshRenderer>().material = materiais[0];
                 else peaoCriado.GetComponent<MeshRenderer>().material = materiais[1];
+                particula = Instantiate(particulaSpawn, posObjeto, Quaternion.identity);
+                Destroy(particula,1);
                 peonData = peaoCriado.GetComponent<PeonData>();
                 if (gameManager.TurnoJogador == 1) peaoCriado.transform.Rotate(0,90,0);
                 else peaoCriado.transform.Rotate(0, -90, 0);
@@ -139,6 +142,8 @@ public class GridManager : MonoBehaviour
                 peaoCriado = Instantiate(peon[1], posObjeto, Quaternion.identity, cubeTemp.transform);
                 if (gameManager.TurnoJogador == 1) peaoCriado.GetComponent<MeshRenderer>().material = materiais[0];
                 else peaoCriado.GetComponent<MeshRenderer>().material = materiais[1];
+                particula = Instantiate(particulaSpawn, posObjeto, Quaternion.identity);
+                Destroy(particula, 1);
                 peonData = peaoCriado.GetComponent<PeonData>();
                 if (gameManager.TurnoJogador == 1) peaoCriado.transform.Rotate(0, 90, 0);
                 else peaoCriado.transform.Rotate(0, -90, 0);
@@ -162,6 +167,8 @@ public class GridManager : MonoBehaviour
                 peaoCriado = Instantiate(peon[2], posObjeto, Quaternion.identity, cubeTemp.transform);
                 if (gameManager.TurnoJogador == 1) peaoCriado.GetComponent<MeshRenderer>().material = materiais[0];
                 else peaoCriado.GetComponent<MeshRenderer>().material = materiais[1];
+                particula = Instantiate(particulaSpawn, posObjeto, Quaternion.identity);
+                Destroy(particula, 1);
                 peonData = peaoCriado.GetComponent<PeonData>();
                 if (gameManager.TurnoJogador == 1) peaoCriado.transform.Rotate(0, 90, 0);
                 else peaoCriado.transform.Rotate(0, -90, 0);

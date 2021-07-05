@@ -83,7 +83,7 @@ public class GameManager : MonoBehaviour
                         BattlePhase = false;
                     }
                 }
-                else if(Physics.Raycast(ray, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().CuboFillId != 1 && MovePhase == true)
+                if(Physics.Raycast(ray, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().CuboFillId != 1 && MovePhase == true)
                 {
 
                     cubo = hit.transform.gameObject;
