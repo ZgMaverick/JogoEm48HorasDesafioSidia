@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Cubo
   - Peon
+  - Pickup
+  - Particle
   layers:
   - Default
   - TransparentFX

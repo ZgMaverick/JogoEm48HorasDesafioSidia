@@ -46,7 +46,6 @@ public class GridManager : MonoBehaviour
         {
             for (int j = 0; j < numCasas; ++j)
             {
-                Debug.Log("mine");
                 Vector3 spawnCubeLoc = new Vector3(j, 0, i) + Vector3.zero;
                 cubeTemp = Instantiate(objetos[0], spawnCubeLoc, Quaternion.identity, this.transform);
                 var cubeData = cubeTemp.GetComponent<CubeData>();
@@ -61,7 +60,7 @@ public class GridManager : MonoBehaviour
 
         //camera dinamica
         Vector3 camPos = new Vector3(0, numCasas, 0);
-        Maincamera.transform.parent.position = ((cube2dVectorStorage[0, 0].transform.position + cube2dVectorStorage[numCasas - 1, numCasas - 1].transform.position) / 2);
+        Maincamera.transform.parent.parent.position = ((cube2dVectorStorage[0, 0].transform.position + cube2dVectorStorage[numCasas - 1, numCasas - 1].transform.position) / 2);
         Maincamera.transform.position += camPos;
         PreparePeonSpawn(playerTurn);
     }
@@ -182,6 +181,20 @@ public class GridManager : MonoBehaviour
             gameManager.SpawnPhase = false;
             LimparTabuleiro();
             SpawnBoardObjects(numeroCasas);
+            cameraTilt(playerTurn);
+        }
+    }
+
+    public void cameraTilt(int playerTurn)
+    {
+        if (playerTurn == 1)
+        {
+            Maincamera.transform.parent.Rotate(-45, 0, 0);
+            Maincamera.transform.parent.parent.Rotate(0, 180, 0);
+        }
+        else
+        {
+            Maincamera.transform.parent.Rotate(-45, 0, 0);
         }
     }
 
@@ -327,6 +340,11 @@ public class GridManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void arrumarCamera(int Jogador)
+    {
+        Maincamera.transform.parent.parent.Rotate(0, 180, 0);
     }
 
     public void PrepareAtk(GameObject peonTemp)

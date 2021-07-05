@@ -104,7 +104,7 @@ public class GameManager : MonoBehaviour
             }
         }
         //Selecionar peao para batalha
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1) && SpawnPhase == false)
         {
             if (SpawnPhase == false)
             {
@@ -123,13 +123,14 @@ public class GameManager : MonoBehaviour
             }
         }
         //passar de turno
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Return) && SpawnPhase == false)
         {
             moveAmount = 0;
             battleAmount = 0;
             endTurnCheck();
         }
     }
+
     //termino de turno altomatico
     public void endTurnCheck()
     {
@@ -143,7 +144,7 @@ public class GameManager : MonoBehaviour
             MovePhase = false;
             if (TurnoJogador == 1)TurnoJogador = 2;
             else TurnoJogador = 1;
-
+            gridManager.arrumarCamera(turnoJogador);
         }
     }
 }
