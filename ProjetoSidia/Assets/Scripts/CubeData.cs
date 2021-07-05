@@ -2,14 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class CubeData : MonoBehaviour
 {
     private int[,] cuboCordenada = new int[2, 1];
-    private int cuboFillId = 0;
+    public int cuboFillId = 0;
 
     public int[,] CuboCordenada { get => cuboCordenada; set => cuboCordenada = value; }
     public int CuboFillId { get => cuboFillId; set => cuboFillId = value; }
 
+  
     
 
     void Start()
@@ -25,19 +27,18 @@ public class CubeData : MonoBehaviour
 
     public void updateFill()
     {
-        foreach (Transform child in transform)
+        if (this.transform.childCount == 0)
         {
-            if (child.tag == "Pickup")
-            {
-                cuboFillId = 2;
-            }
-            else if(child.tag == "Peon")
-            {
-                cuboFillId = 1;
-            }
-            else {
-                cuboFillId = 0;
-            }
+            CuboFillId = 0;
         }
+        else if (this.transform.GetChild(0).tag == "Pickup")
+        {
+            CuboFillId = 2;
+        }
+        else if (this.transform.GetChild(0).tag == "Peon")
+        {
+            CuboFillId = 1;
+        }
+
     }
 }

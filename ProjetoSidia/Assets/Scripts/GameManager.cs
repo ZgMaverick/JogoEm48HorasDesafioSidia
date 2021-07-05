@@ -1,13 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static int numeroCasas = 16;
+    private int pecasJogador1 = 3;
+    private int pecasJogador2 = 3;
     public static bool singlePlayer;
     public GridManager gridManager;
     bool deployPhase;
+
     private int moveAmount = 2;
     private int battleAmount = 1;
     private bool movePhase = false;
@@ -17,14 +22,19 @@ public class GameManager : MonoBehaviour
     private bool spawnPhase = true;
     private int spawnAmount = 6;
     private bool mouseLock = false;
+
     int countClass = 0;
     int countClass2 = 1;
 
     GameObject cuboPeao;
     GameObject peao;
-    GameObject cubo;
+    GameObject cubo;    
     GameObject alvo = null;
     GameObject pickUp;
+
+    public Text [] text;
+
+    public GameObject image;
 
     public int MoveAmount { get => moveAmount; set => moveAmount = value; }
     public int BattleAmount { get => battleAmount; set => battleAmount = value; }
@@ -35,6 +45,9 @@ public class GameManager : MonoBehaviour
     public bool SpawnPhase { get => spawnPhase; set => spawnPhase = value; }
     public int SpawnAmount { get => spawnAmount; set => spawnAmount = value; }
     public bool MouseLock { get => mouseLock; set => mouseLock = value; }
+
+    public int PecasJogador1 { get => pecasJogador1; set => pecasJogador1 = value; }
+    public int PecasJogador2 { get => pecasJogador2; set => pecasJogador2 = value; }
 
     void awake()
     {
@@ -50,7 +63,7 @@ public class GameManager : MonoBehaviour
 
     void Update()   
     {
-        Ray mouse = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
         //Selecionar peao para movimentar /usar para movimento /usar para batalha
@@ -58,7 +71,7 @@ public class GameManager : MonoBehaviour
         {
             if (SpawnPhase == false)
             {
-                if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().CuboFillId == 1 && MoveAmount > 0 && MovePhase == false)
+                if (Physics.Raycast(ray, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().CuboFillId == 1 && MoveAmount > 0 && MovePhase == false)
                 {                   
                     cuboPeao = hit.transform.gameObject;
                     cuboPeao.GetComponent<CubeData>().updateFill();
@@ -70,7 +83,7 @@ public class GameManager : MonoBehaviour
                         BattlePhase = false;
                     }
                 }
-                else if(Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().CuboFillId != 1 && MovePhase == true)
+                else if(Physics.Raycast(ray, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().CuboFillId != 1 && MovePhase == true)
                 {
 
                     cubo = hit.transform.gameObject;
@@ -83,21 +96,17 @@ public class GameManager : MonoBehaviour
                     gridManager.Movimento(peao, cubo, cuboPeao);
 
                 }
-                else if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().CuboFillId == 1 && BattleAmount > 0 && BattlePhase == true)
+                else if (Physics.Raycast(ray, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().CuboFillId == 1 && BattleAmount > 0 && BattlePhase == true)
                 {                  
                     cubo = hit.transform.gameObject;
-                    alvo = cuboPeao.transform.GetChild(0).gameObject;
+                    alvo = cubo.transform.GetChild(0).gameObject;
                     gridManager.Ataque(peao, alvo, cubo);
                 }
             }
             else
             {
-                if (0 >= SpawnAmount)
-                {
-                    SpawnPhase = false;
-                    gridManager.LimparTabuleiro();
-                }
-                if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().CuboFillId == 0)
+
+                if (Physics.Raycast(ray, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().CuboFillId == 0)
                 {
                     SpawnAmount--;
                     countClass++;
@@ -117,7 +126,7 @@ public class GameManager : MonoBehaviour
         {
             if (SpawnPhase == false)
             {
-                if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().CuboFillId == 1 && BattleAmount > 0 && BattlePhase == false)
+                if (Physics.Raycast(ray, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().CuboFillId == 1 && BattleAmount > 0 && BattlePhase == false)
                 {
                     cuboPeao = hit.transform.gameObject;
                     peao = cuboPeao.transform.GetChild(0).gameObject;
@@ -138,22 +147,81 @@ public class GameManager : MonoBehaviour
             battleAmount = 0;
             endTurnCheck();
         }
+
+        
+        if (Physics.Raycast(ray, out hit) && hit.transform.gameObject.tag == "Cubo" && hit.transform.gameObject.transform.childCount == 1)
+        {
+            if (hit.transform.gameObject.transform.GetChild(0).tag == "Peon") {
+                var tempCubo = hit.transform.gameObject.transform.GetChild(0);
+                text[0].text = "Velocidade: " + "\n" + tempCubo.GetComponent<PeonData>().Move + "\n" +
+                        "alcance: " + "\n" + tempCubo.GetComponent<PeonData>().AtkRange + "\n" +
+                        "dano: " + "\n" + tempCubo.GetComponent<PeonData>().Damage + "\n" +
+                        "vida: " + "\n" + tempCubo.GetComponent<PeonData>().Health + "\n";
+            }
+            else
+            {
+                text[0].text = "Velocidade: " + "\n" + "\n" +
+                        "alcance: " + "\n" + "\n" +
+                        "dano: " + "\n" +  "\n" +
+                        "vida: " + "\n" +  "\n";
+            }
+        }
     }
 
+    
     //termino de turno altomatico
     public void endTurnCheck()
     {
         if(BattleAmount <= 0 && MoveAmount <=0)
         {
-            gridManager.LimparTabuleiro();
-            MoveAmount = 2;
-            BattleAmount = 1;
-            NumberDice = 3;
-            BattlePhase = false;
-            MovePhase = false;
-            if (TurnoJogador == 1)TurnoJogador = 2;
-            else TurnoJogador = 1;
-            gridManager.arrumarCamera(turnoJogador);
+            StartCoroutine(finalizarTurno());
         }
+    }
+
+    public void textoTurno()
+    {
+        text[1].text = "JOGADOR: " + "\n" +TurnoJogador+ "\n" +
+                        "Movimento: " + "\n" + MoveAmount + "\n" +
+                        "Batalha: " + "\n" + BattleAmount + "\n";
+    }
+
+    public void endGameCheck ()
+    {
+        if (PecasJogador1 == 0)
+        {
+            image.SetActive(true);
+            text[2].text = "JOGADOR 1 VENCEU";
+        }
+        else if (PecasJogador2 == 0)
+        {
+            image.SetActive(true);
+            text[2].text = "JOGADOR 2 VENCEU";
+        }
+    }
+
+    public void jogarNovamente()
+    {
+        SceneManager.LoadScene(1);
+    }
+
+    public void menuPrincipal()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    IEnumerator finalizarTurno()
+    {
+        yield return new WaitForSeconds(0.5f);
+        gridManager.LimparTabuleiro();
+        MoveAmount = 2;
+        BattleAmount = 1;
+        NumberDice = 3;
+        BattlePhase = false;
+        MovePhase = false;
+        if (TurnoJogador == 1) TurnoJogador = 2;
+        else TurnoJogador = 1;
+        gridManager.arrumarCamera(turnoJogador);
+        textoTurno();
+
     }
 }

@@ -38,6 +38,7 @@ public class PeonData : MonoBehaviour
         {
             Debug.Log("Peao do jogador " + player + " foi morto");
             Destroy(this.gameObject);
+            
         }
     }
 

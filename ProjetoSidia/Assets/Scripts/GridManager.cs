@@ -188,6 +188,7 @@ public class GridManager : MonoBehaviour
             LimparTabuleiro();
             SpawnBoardObjects(numeroCasas);
             cameraTilt(playerTurn);
+            gameManager.textoTurno();
         }
     }
 
@@ -585,9 +586,23 @@ public class GridManager : MonoBehaviour
         if (atkOk >= 2)
         {
             vida = vida - dano;
-            alvoTemp.GetComponent<PeonData>().Health = vida;
-            alvoTemp.GetComponent<PeonData>().Checkhealth();
-            if (vida < 0) vida = 0;
+            
+            if (vida > 0)
+            {
+                alvoTemp.GetComponent<PeonData>().Health = vida;
+            }
+            else
+            {
+
+                if (alvoTemp.GetComponent<PeonData>().Player == 1) gameManager.PecasJogador1--;
+                else gameManager.PecasJogador2--;
+                gameManager.endGameCheck();
+                Destroy(alvoTemp);
+                //cuboTemp.GetComponent<CubeData>().updateFill();
+                cuboTemp.GetComponent<CubeData>().CuboFillId = 0;
+            }
+                
+
             Debug.Log("ATAQUE CONECTOU!!!!");
             Debug.Log("Oponente leva " + dano + " de dano!");
             if (vida > 0) Debug.Log("Oponente ainda tem mais " + vida + " de vida");
@@ -600,7 +615,6 @@ public class GridManager : MonoBehaviour
 
 
         //cubos
-        cuboTemp.GetComponent<CubeData>().updateFill();
         foreach (GameObject a in cubeVectorStorage)
         {
             a.GetComponent<BoxCollider>().enabled = true;
@@ -612,7 +626,7 @@ public class GridManager : MonoBehaviour
         else Debug.Log("Batalha acabada");
         gameManager.BattlePhase = false;
         gameManager.endTurnCheck();
-
+        gameManager.textoTurno();
     }
 
     IEnumerator PeonMoveAnim(GameObject peaoTemp, GameObject cuboTemp, GameObject cuboPeao)
@@ -663,6 +677,6 @@ public class GridManager : MonoBehaviour
         else Debug.Log("Movimento acabado");
         gameManager.MovePhase = false;
         gameManager.endTurnCheck();
-
+        gameManager.textoTurno();
     }
 }
