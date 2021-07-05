@@ -223,7 +223,7 @@ public class GridManager : MonoBehaviour
             for (int j = 0; j <= numCasas - 1; ++j)
             {
                 if (virtualBoard[i, j] != 1 && virtualBoard[i, j] != 2)
-                    if (Random.Range(1, 101) <= 30)
+                    if (Random.Range(1, 101) <= 50)
                         if (virtualBoard[i, j] == 0)
                         {
                             virtualBoard[i, j] = Random.Range(1, 5);
@@ -268,6 +268,7 @@ public class GridManager : MonoBehaviour
                         //criar objeto
                         posObjeto += cube2dVectorStorage[i, j].transform.position;
                         pickupCriado = Instantiate(objetos[2], posObjeto, Quaternion.identity, cube2dVectorStorage[i, j].transform);
+                        pickupCriado.transform.Rotate(90, 90, 0);
                         pickupData = pickupCriado.GetComponent<PickupData>();
                         //dar valor
                         //pickupData.BonusBattle = 0;
@@ -311,6 +312,7 @@ public class GridManager : MonoBehaviour
                         posObjeto += cube2dVectorStorage[i, j].transform.position;
                         pickupCriado = Instantiate(objetos[4], posObjeto, Quaternion.identity, cube2dVectorStorage[i, j].transform);
                         pickupData = pickupCriado.GetComponent<PickupData>();
+                        pickupCriado.transform.Rotate(0, 90, 0);
                         //dar valor
                         //pickupData.BonusBattle = 0;
                         //pickupData.BonusMove = 0;
