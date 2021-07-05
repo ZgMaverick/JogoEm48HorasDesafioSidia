@@ -19,6 +19,7 @@ public class GridManager : MonoBehaviour
     public Camera Maincamera;
     public GameManager gameManager;
     public Material[] materiais;
+    public AudioSource[] audio;
 
 
     // Start is called before the first frame update
@@ -104,7 +105,7 @@ public class GridManager : MonoBehaviour
 
         Vector3 posObjeto = new Vector3(0, 0.90f, 0);
         GameObject peaoCriado;
-
+        audio[0].Play();
         switch (peonType)
         {
             case 1:
@@ -128,7 +129,7 @@ public class GridManager : MonoBehaviour
                 if (gameManager.TurnoJogador == 1) peonData.Player = 1;
                 else peonData.Player = 2;
                 //cubo
-                cubeTemp.GetComponent<CubeData>().updateFill();
+                cubeTemp.GetComponent<CubeData>().UpdateFill();
 
                 break;
             case 2:
@@ -152,7 +153,7 @@ public class GridManager : MonoBehaviour
                 if (gameManager.TurnoJogador == 1) peonData.Player = 1;
                 else peonData.Player = 2;
                 //cubo
-                cubeTemp.GetComponent<CubeData>().updateFill();
+                cubeTemp.GetComponent<CubeData>().UpdateFill();
                 break;
             case 3:
 
@@ -175,7 +176,7 @@ public class GridManager : MonoBehaviour
                 if (gameManager.TurnoJogador == 1) peonData.Player = 1;
                 else peonData.Player = 2;
                 //cubo
-                cubeTemp.GetComponent<CubeData>().updateFill();
+                cubeTemp.GetComponent<CubeData>().UpdateFill();
                 break;
            default:
                 break;
@@ -187,12 +188,12 @@ public class GridManager : MonoBehaviour
             gameManager.SpawnPhase = false;
             LimparTabuleiro();
             SpawnBoardObjects(numeroCasas);
-            cameraTilt(playerTurn);
-            gameManager.textoTurno();
+            CameraTilt(playerTurn);
+            gameManager.TextoTurno();
         }
     }
 
-    public void cameraTilt(int playerTurn)
+    public void CameraTilt(int playerTurn)
     {
         if (playerTurn == 1)
         {
@@ -252,7 +253,7 @@ public class GridManager : MonoBehaviour
                             pickupCriado.transform.GetChild(0).gameObject.SetActive(true);
                         }
                         //cubo
-                        cube2dVectorStorage[i, j].GetComponent<CubeData>().updateFill();
+                        cube2dVectorStorage[i, j].GetComponent<CubeData>().UpdateFill();
 
                         break;
                     case 2:
@@ -273,7 +274,7 @@ public class GridManager : MonoBehaviour
                             pickupCriado.transform.GetChild(0).gameObject.SetActive(true);
                         }
                         //cubo
-                        cube2dVectorStorage[i, j].GetComponent<CubeData>().updateFill();
+                        cube2dVectorStorage[i, j].GetComponent<CubeData>().UpdateFill();
 
                         break;
                     case 3:
@@ -294,7 +295,7 @@ public class GridManager : MonoBehaviour
                             pickupCriado.transform.GetChild(0).gameObject.SetActive(true);
                         }
                         //cubo
-                        cube2dVectorStorage[i, j].GetComponent<CubeData>().updateFill();
+                        cube2dVectorStorage[i, j].GetComponent<CubeData>().UpdateFill();
 
                         break;
                     case 4:
@@ -315,7 +316,7 @@ public class GridManager : MonoBehaviour
                             pickupCriado.transform.GetChild(0).gameObject.SetActive(true);
                         }
                         //cubo
-                        cube2dVectorStorage[i, j].GetComponent<CubeData>().updateFill();
+                        cube2dVectorStorage[i, j].GetComponent<CubeData>().UpdateFill();
 
                         break;
                     default:
@@ -326,7 +327,7 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public void respawnObjects()
+    public void RespawnObjects()
     {
         int i, j;
         
@@ -366,7 +367,7 @@ public class GridManager : MonoBehaviour
                             pickupCriado.transform.GetChild(0).gameObject.SetActive(true);
                         }
                         //cubo
-                        cube2dVectorStorage[i, j].GetComponent<CubeData>().updateFill();
+                        cube2dVectorStorage[i, j].GetComponent<CubeData>().UpdateFill();
 
                         break;
                     case 2:
@@ -387,7 +388,7 @@ public class GridManager : MonoBehaviour
                             pickupCriado.transform.GetChild(0).gameObject.SetActive(true);
                         }
                         //cubo
-                        cube2dVectorStorage[i, j].GetComponent<CubeData>().updateFill();
+                        cube2dVectorStorage[i, j].GetComponent<CubeData>().UpdateFill();
 
                         break;
                     case 3:
@@ -408,7 +409,7 @@ public class GridManager : MonoBehaviour
                             pickupCriado.transform.GetChild(0).gameObject.SetActive(true);
                         }
                         //cubo
-                        cube2dVectorStorage[i, j].GetComponent<CubeData>().updateFill();
+                        cube2dVectorStorage[i, j].GetComponent<CubeData>().UpdateFill();
 
                         break;
                     case 4:
@@ -429,7 +430,7 @@ public class GridManager : MonoBehaviour
                             pickupCriado.transform.GetChild(0).gameObject.SetActive(true);
                         }
                         //cubo
-                        cube2dVectorStorage[i, j].GetComponent<CubeData>().updateFill();
+                        cube2dVectorStorage[i, j].GetComponent<CubeData>().UpdateFill();
 
                         break;
                     default:
@@ -464,7 +465,7 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public void arrumarCamera(int Jogador)
+    public void ArrumarCamera(int Jogador)
     {
         Maincamera.transform.parent.parent.Rotate(0, 180, 0);
     }
@@ -509,8 +510,9 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public void pickUpPickup(GameObject peaoTemp, GameObject pickUpTemp)
+    public void PickUpPickup(GameObject peaoTemp, GameObject pickUpTemp)
     {
+        audio[3].Play();
         //realisar ajuste valores
         var pickupData = pickUpTemp.GetComponent<PickupData>();
         var peaoData = peaoTemp.GetComponent<PeonData>();
@@ -551,7 +553,7 @@ public class GridManager : MonoBehaviour
     {
         //tirar batalha
         gameManager.BattleAmount--;
-
+        audio[1].Play();
         //pegar data
         int[] player1Atk = new int[gameManager.NumberDice];
         int[] player2Atk = new int[3];
@@ -596,10 +598,11 @@ public class GridManager : MonoBehaviour
 
                 if (alvoTemp.GetComponent<PeonData>().Player == 1) gameManager.PecasJogador1--;
                 else gameManager.PecasJogador2--;
-                gameManager.endGameCheck();
+                gameManager.EndGameCheck();
                 Destroy(alvoTemp);
                 //cuboTemp.GetComponent<CubeData>().updateFill();
                 cuboTemp.GetComponent<CubeData>().CuboFillId = 0;
+                audio[4].Play();
             }
                 
 
@@ -625,12 +628,13 @@ public class GridManager : MonoBehaviour
         if (gameManager.BattleAmount > 0) Debug.Log(gameManager.BattleAmount + " Batalha(s) Sobrando!");
         else Debug.Log("Batalha acabada");
         gameManager.BattlePhase = false;
-        gameManager.endTurnCheck();
-        gameManager.textoTurno();
+        gameManager.EndTurnCheck();
+        gameManager.TextoTurno();
     }
 
     IEnumerator PeonMoveAnim(GameObject peaoTemp, GameObject cuboTemp, GameObject cuboPeao)
     {
+        audio[2].Play();
         //tirar acao
         gameManager.MoveAmount--;
 
@@ -676,7 +680,7 @@ public class GridManager : MonoBehaviour
         if (gameManager.MoveAmount > 0) Debug.Log(gameManager.MoveAmount + " Movimento(s) Sobrando!");
         else Debug.Log("Movimento acabado");
         gameManager.MovePhase = false;
-        gameManager.endTurnCheck();
-        gameManager.textoTurno();
+        gameManager.EndTurnCheck();
+        gameManager.TextoTurno();
     }
 }

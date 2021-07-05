@@ -25,7 +25,7 @@ public class CubeData : MonoBehaviour
         
     }
 
-    public void updateFill()
+    public void UpdateFill()
     {
         if (this.transform.childCount == 0)
         {

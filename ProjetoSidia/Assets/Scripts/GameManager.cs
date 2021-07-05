@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviour
                 if (Physics.Raycast(ray, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().CuboFillId == 1 && MoveAmount > 0 && MovePhase == false)
                 {                   
                     cuboPeao = hit.transform.gameObject;
-                    cuboPeao.GetComponent<CubeData>().updateFill();
+                    cuboPeao.GetComponent<CubeData>().UpdateFill();
                     peao = cuboPeao.transform.GetChild(0).gameObject;
                     if (peao.GetComponent<PeonData>().Player == TurnoJogador)
                     {
@@ -87,11 +87,11 @@ public class GameManager : MonoBehaviour
                 {
 
                     cubo = hit.transform.gameObject;
-                    cubo.GetComponent<CubeData>().updateFill();
+                    cubo.GetComponent<CubeData>().UpdateFill();
                     if (cubo.transform.childCount != 0)
                     {
                         pickUp = cubo.transform.GetChild(0).gameObject;
-                        gridManager.pickUpPickup(peao, pickUp);
+                        gridManager.PickUpPickup(peao, pickUp);
                     }
                     gridManager.Movimento(peao, cubo, cuboPeao);
 
@@ -145,7 +145,7 @@ public class GameManager : MonoBehaviour
         {
             moveAmount = 0;
             battleAmount = 0;
-            endTurnCheck();
+            EndTurnCheck();
         }
 
         
@@ -170,22 +170,22 @@ public class GameManager : MonoBehaviour
 
     
     //termino de turno altomatico
-    public void endTurnCheck()
+    public void EndTurnCheck()
     {
         if(BattleAmount <= 0 && MoveAmount <=0)
         {
-            StartCoroutine(finalizarTurno());
+            StartCoroutine(FinalizarTurno());
         }
     }
 
-    public void textoTurno()
+    public void TextoTurno()
     {
         text[1].text = "JOGADOR: " + "\n" +TurnoJogador+ "\n" +
                         "Movimento: " + "\n" + MoveAmount + "\n" +
                         "Batalha: " + "\n" + BattleAmount + "\n";
     }
 
-    public void endGameCheck ()
+    public void EndGameCheck ()
     {
         if (PecasJogador1 == 0)
         {
@@ -199,17 +199,17 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void jogarNovamente()
+    public void JogarNovamente()
     {
         SceneManager.LoadScene(1);
     }
 
-    public void menuPrincipal()
+    public void MenuPrincipal()
     {
         SceneManager.LoadScene(0);
     }
 
-    IEnumerator finalizarTurno()
+    IEnumerator FinalizarTurno()
     {
         yield return new WaitForSeconds(0.5f);
         gridManager.LimparTabuleiro();
@@ -220,8 +220,8 @@ public class GameManager : MonoBehaviour
         MovePhase = false;
         if (TurnoJogador == 1) TurnoJogador = 2;
         else TurnoJogador = 1;
-        gridManager.arrumarCamera(turnoJogador);
-        textoTurno();
+        gridManager.ArrumarCamera(TurnoJogador);
+        TextoTurno();
 
     }
 }

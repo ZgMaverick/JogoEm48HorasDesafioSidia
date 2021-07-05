@@ -10,6 +10,7 @@ public class Menu : MonoBehaviour
     private bool isOpen;
     public GameObject botoesPrinc;
     public GameObject botoesTam;
+    public AudioSource click;   
 
     public bool IsOpen
     {
@@ -32,16 +33,15 @@ public class Menu : MonoBehaviour
 
     public void multiPlayer()
     {
-
+        click.Play();
         Debug.Log("multiplayer");
-        botoesPrinc.SetActive(false);
-        botoesTam.SetActive(true);
+        StartCoroutine(ImageChange(0.5f));
         GameManager.singlePlayer = true;
     }
 
     public void vsAi()
     {
-
+        click.Play();
         Debug.Log("2");
         //botoesPrinc.SetActive(false);
         //botoesTam.SetActive(false);
@@ -50,7 +50,7 @@ public class Menu : MonoBehaviour
 
     public void menuOpcoes()
     {
-
+        click.Play();
         Debug.Log("3");
         StartCoroutine(MenuChange(0.5f));
 
@@ -58,13 +58,14 @@ public class Menu : MonoBehaviour
 
     public void menuAjuda()
     {
-
+        click.Play();
         Debug.Log("4");
         StartCoroutine(MenuChange(0.5f));
     }
 
     public void sairJogo()
     {
+        click.Play();
         Debug.Log("exitgame");
         Application.Quit();
     }
@@ -72,7 +73,7 @@ public class Menu : MonoBehaviour
     public void Tam6x6()
     {
         Debug.Log("66");
-
+        click.Play();
         SceneManager.LoadScene(1);
         GameManager.numeroCasas = 6;
     }
@@ -80,7 +81,7 @@ public class Menu : MonoBehaviour
     public void Tam10x10()
     {
         Debug.Log("1010");
-
+        click.Play();
         SceneManager.LoadScene(1);
         GameManager.numeroCasas = 10;
     }
@@ -88,16 +89,15 @@ public class Menu : MonoBehaviour
     public void Tam16x16()
     {
         Debug.Log("1616");
-
+        click.Play();
         SceneManager.LoadScene(1);
         GameManager.numeroCasas = 16;
     }
 
     public void VoltarBotMen()
     {
-        botoesPrinc.SetActive(true);
-        botoesTam.SetActive(false);
-
+        click.Play();
+        StartCoroutine(ImageChange(0.5f));
     }
 
     IEnumerator MenuChange(float delayTime)
@@ -116,6 +116,21 @@ public class Menu : MonoBehaviour
             yield return new WaitForSeconds(delayTime);
             menuManager.ShowMenu(menuManager.menuConfig);
 
+        }
+    }
+    IEnumerator ImageChange(float delayTime)
+    {
+        if (botoesTam.activeSelf == true)
+        {
+            botoesPrinc.SetActive(true);
+            botoesTam.SetActive(false);
+            yield return new WaitForSeconds(delayTime);
+        }
+        else
+        {
+            botoesPrinc.SetActive(false);
+            botoesTam.SetActive(true);
+            yield return new WaitForSeconds(delayTime);
         }
     }
 }
