@@ -10,6 +10,7 @@ public class Menu : MonoBehaviour
     private bool isOpen;
     public GameObject botoesPrinc;
     public GameObject botoesTam;
+    public GameObject[] ajuda;          
     public AudioSource click;   
 
     public bool IsOpen
@@ -99,7 +100,31 @@ public class Menu : MonoBehaviour
         click.Play();
         StartCoroutine(ImageChange(0.5f));
     }
-
+    public void ajudaMenuToggle()
+    {
+        click.Play();
+        if (ajuda[0].activeSelf == true) ajuda[0].SetActive(false);
+        else ajuda[0].SetActive(true);
+    }
+    public void ajudaMenuToggleTips()
+    {
+        click.Play();
+        if (ajuda[1].activeSelf == true)
+        {
+            ajuda[2].SetActive(true);
+            ajuda[1].SetActive(false);
+        }
+        else if (ajuda[2].activeSelf == true)
+        {
+            ajuda[3].SetActive(true);
+            ajuda[2].SetActive(false);
+        }
+        else if (ajuda[3].activeSelf == true)
+        {
+            ajuda[1].SetActive(true);
+            ajuda[3].SetActive(false);
+        }
+    }
     IEnumerator MenuChange(float delayTime)
     {
         if (menuManager.menuAtual.name == menuManager.menuConfig.name)
