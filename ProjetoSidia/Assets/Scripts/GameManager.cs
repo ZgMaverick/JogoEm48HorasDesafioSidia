@@ -17,11 +17,13 @@ public class GameManager : MonoBehaviour
     private bool spawnPhase = true;
     private int spawnAmount = 6;
     private bool mouseLock = false;
+    int countClass = 0;
+    int countClass2 = 1;
 
     GameObject cuboPeao;
     GameObject peao;
     GameObject cubo;
-    GameObject alvo;
+    GameObject alvo = null;
     GameObject pickUp;
 
     public int MoveAmount { get => moveAmount; set => moveAmount = value; }
@@ -56,20 +58,23 @@ public class GameManager : MonoBehaviour
         {
             if (SpawnPhase == false)
             {
-                if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().cuboFillId == 1 && MoveAmount > 0 && MovePhase == false)
-                {
+                if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().CuboFillId == 1 && MoveAmount > 0 && MovePhase == false)
+                {                   
                     cuboPeao = hit.transform.gameObject;
+                    cuboPeao.GetComponent<CubeData>().updateFill();
                     peao = cuboPeao.transform.GetChild(0).gameObject;
                     if (peao.GetComponent<PeonData>().Player == TurnoJogador)
                     {
                         gridManager.PrepareMov(peao);
                         MovePhase = true;
+                        BattlePhase = false;
                     }
                 }
-                if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().cuboFillId != 1 && MovePhase == true)
+                else if(Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().CuboFillId != 1 && MovePhase == true)
                 {
 
                     cubo = hit.transform.gameObject;
+                    cubo.GetComponent<CubeData>().updateFill();
                     if (cubo.transform.childCount != 0)
                     {
                         pickUp = cubo.transform.GetChild(0).gameObject;
@@ -78,13 +83,11 @@ public class GameManager : MonoBehaviour
                     gridManager.Movimento(peao, cubo, cuboPeao);
 
                 }
-                if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().cuboFillId == 1 && BattleAmount > 0 && BattlePhase == true)
-                {
-
+                else if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().CuboFillId == 1 && BattleAmount > 0 && BattlePhase == true)
+                {                  
                     cubo = hit.transform.gameObject;
                     alvo = cuboPeao.transform.GetChild(0).gameObject;
                     gridManager.Ataque(peao, alvo, cubo);
-
                 }
             }
             else
@@ -94,12 +97,18 @@ public class GameManager : MonoBehaviour
                     SpawnPhase = false;
                     gridManager.LimparTabuleiro();
                 }
-                if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().cuboFillId == 0)
+                if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().CuboFillId == 0)
                 {
                     SpawnAmount--;
+                    countClass++;
                     cubo = hit.transform.gameObject;
-                    gridManager.SpawnPlayerPeons(cubo, turnoJogador, 1);    
-                    
+                    gridManager.SpawnPlayerPeons(cubo, turnoJogador, countClass2);
+                    if (countClass == 2)
+                    {
+                        countClass = 0;
+                        countClass2++;
+                    }
+
                 }
             }
         }
@@ -108,7 +117,7 @@ public class GameManager : MonoBehaviour
         {
             if (SpawnPhase == false)
             {
-                if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().cuboFillId == 1 && BattleAmount > 0 && BattlePhase == false)
+                if (Physics.Raycast(mouse, out hit) && hit.transform.tag == "Cubo" && hit.transform.gameObject.GetComponent<CubeData>().CuboFillId == 1 && BattleAmount > 0 && BattlePhase == false)
                 {
                     cuboPeao = hit.transform.gameObject;
                     peao = cuboPeao.transform.GetChild(0).gameObject;
